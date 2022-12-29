@@ -1,6 +1,5 @@
-# Getting Started with Create React App
+# Getting Started with San Jose Course User Interface
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
@@ -13,6 +12,12 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
+
+### `npm run build && npm run deploy`
+
+Builds the app then deploys it to the github page: 
+Open [https://urbanputt.github.io/sj-course-ui/](https://urbanputt.github.io/sj-course-ui/) to view it in your browser.
+
 
 ### `npm test`
 
