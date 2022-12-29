@@ -4,7 +4,8 @@ import ROSLIB from 'roslib'
 
 const rosObj = {
   ROS: new ROSLIB.Ros(),
-  url: "ws://localhost:9090",
+  url: "ws://0.0.0.0:9090",
+  
   isConnected: false,
   ROSConfirmedConnected: false,
   autoconnect: false,
