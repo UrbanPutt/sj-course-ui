@@ -142,6 +142,7 @@ function useROS() {
 
       ros.ROS.on('error', (error) => {  //gets a little annoying on the console, but probably ok for now
         console.log(error);
+        console.log("roslibjs failed to connect");
       })
     } catch (e) {
       console.log(e);

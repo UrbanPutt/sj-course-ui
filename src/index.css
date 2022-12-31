@@ -13,6 +13,10 @@
         rounded-3xl hover:rounded-xl transition-all
     }
 
+    br{
+      @apply text-xs;
+    }
+
     .section{
       @apply p-8;
     }

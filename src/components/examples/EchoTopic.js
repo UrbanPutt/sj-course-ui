@@ -6,7 +6,9 @@ let listener = null;
 function EchoTopic() {
   const { createListener,removeListener, topics, isConnected, autoconnect } = useROS();
   var topicMsgType = "";
-  var topicPath = "/connectionStatu";
+  var topicPath = "/";
+  
+
   const [ queue, setQueue ] = useState(0);
   const [ compression, setCompression ] = useState('none');
   const [ topicMsg, setTopicMsg ] = useState('Nothing');
@@ -87,6 +89,13 @@ function EchoTopic() {
       if(msg.name[0] === "jaw_joint")
       {
         setTopicMsg("position: " + msg.position);
+      }
+    }
+    else if (topicMsgType === "diagnostic_msgs/msg/KeyValue"){
+      if (msg.key === 'J')
+      {
+        //console.log(String(msg.key))
+        setTopicMsg(String(msg.value));
       }
     }
     else if (String(topicMsgType).endsWith("std_msgs/msg/Bool")){

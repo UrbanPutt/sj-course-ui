@@ -1,4 +1,5 @@
-import EchoTopic from './components/examples/EchoTopic'
+//import EchoTopic from './components/examples/EchoTopic'
+import EchoMotorStatusTopic from './components/examples/EchoMotorStatusTopic'
 import {ROS} from './components/ROS'
 import Header from './components/Header';
 import FullscreenBtn from './components/FullScreenBtn';
@@ -12,11 +13,13 @@ function App() {
   return (
     <ROS>
       <Header />
-      <div className="section">
+      <div className="section h-screen w-screen justify-center">
         <AutoConnect />
-        <EchoTopic className="section"/>
-        <FullscreenBtn />
-      </div>
+        <EchoMotorStatusTopic />
+        <div className="fixed bottom-1 right-1 z-50">
+          <FullscreenBtn  />
+        </div>
+      </div>   
     </ROS>
   );
 }
