@@ -4,6 +4,7 @@ import {ROS} from './components/ROS'
 import Header from './components/Header';
 import FullscreenBtn from './components/FullScreenBtn';
 import AutoConnect from './components/AutoConnect'
+import MotorStatusTopicProvider from './components/examples/MotorStatusTopicProvider';
 
 function App() {
 
@@ -15,7 +16,7 @@ function App() {
       <Header />
       <div className="section h-screen w-screen justify-center">
         <AutoConnect />
-        <EchoMotorStatusTopic />
+        <MotorStatusTopicProvider />
         <div className="fixed bottom-1 right-1 z-50">
           <FullscreenBtn  />
         </div>
