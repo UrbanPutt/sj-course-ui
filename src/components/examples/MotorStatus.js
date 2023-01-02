@@ -1,5 +1,4 @@
 import React from 'react'
-import P5example from '../P5example';
 
 export default function MotorStatus(props) {
   
