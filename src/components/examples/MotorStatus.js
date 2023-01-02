@@ -1,4 +1,5 @@
 import React from 'react'
+import P5example from '../P5example';
 
 export default function MotorStatus(props) {
   
@@ -28,7 +29,9 @@ export default function MotorStatus(props) {
       <b></b>Ready: {String(statusBits.Ready)} <br />
       <b></b>Homed: {String(statusBits.Homed)} <br />
       <b></b><br />
+
     </div>
+    
   );
 }
 
