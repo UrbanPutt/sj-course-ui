@@ -5,7 +5,7 @@ import Header from './components/Header';
 import FullscreenBtn from './components/FullScreenBtn';
 import AutoConnect from './components/AutoConnect'
 import MotorStatusTopicProvider from './components/examples/MotorStatusTopicProvider';
-import P5example from './components/P5example';
+
 
 function App() {
 
