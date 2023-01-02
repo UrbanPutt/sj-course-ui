@@ -88,10 +88,6 @@ function MotorStatusTopicProvider() {
     }
   }
 
-  
-
-  //setInterval(handleTopic(topicPath),1000)
-
 
   return (
     <div>
