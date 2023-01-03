@@ -2,22 +2,65 @@ import React, { useState, useEffect } from 'react'
 import {useROS } from '../ROS'
 import MotorStatus from './MotorStatus';
 let added = false;
-function MotorStatusTopicProvider() {
-  const { createListener, topics, isConnected } = useROS();
 
+function MotorStatusTopicProvider(props) {
+  const { createListener, topics,removeAllListeners, checkConnection} = useROS();
 
-  var topicMsgType = "";
+  let topicMsgType = "";
   const topicPath = "/motorStatus";
 
 
   const [ jawMsg, setJawMsg ] = useState('{}');
   const [ torsoMsg, setTorsoMsg ] = useState('{}');
 
+  
+  setInterval(()=>{
+    checkConnection();
+  },200)
+  
+
+
+
 
   useEffect(() => {
-    handleTopic(topicPath);
-  });
+    
+   
 
+    if(props.isConnected){
+      console.log("connected...")
+    }
+    return() => {
+      removeAllListeners();
+      console.log("all listeners removed");
+      added = false;
+    };
+
+  },[]);
+
+  const handleTopic = () => {
+
+    if (props.isConnected) {
+      
+      const isValid = checkTopic(topicPath); //check to see if the topicInput is a valid topic name
+      //const isValid = false;
+      if (isValid) {
+        subscribe();
+        added = true;
+        //console.log("Subscribing to messages from topic: " + topicInput);
+        //console.log("topic input: "+topicInput);
+        
+        //jawMsg = "topic found - waiting for first message");
+
+      } else {
+        //jawMsg("topic not found");
+        console.log(topicPath + " is not a valid topic name...make sure to input the full topic path - including the leading '/'");
+      }
+    }
+    else{
+      //setListener(null);
+    }
+    return;
+  }
 
 
 
@@ -47,30 +90,7 @@ function MotorStatusTopicProvider() {
   }
 
   
-  const handleTopic = (topicPath) => {
-    console.log("handleTopic fired");
-    if (isConnected & !added) {
-      
-      const isValid = checkTopic(topicPath); //check to see if the topicInput is a valid topic name
-      //const isValid = false;
-      if (isValid) {
-        subscribe();
-        added = true;
-        //console.log("Subscribing to messages from topic: " + topicInput);
-        //console.log("topic input: "+topicInput);
-        
-        //jawMsg = "topic found - waiting for first message");
 
-      } else {
-        //jawMsg("topic not found");
-        console.log(topicPath + " is not a valid topic name...make sure to input the full topic path - including the leading '/'");
-      }
-    }
-    else{
-      //setListener(null);
-    }
-    return;
-  }
 
 
   const handleMsg = (msg) => {
@@ -88,12 +108,15 @@ function MotorStatusTopicProvider() {
     }
   }
 
+  if(props.isConnected & !added){
+    console.log("adding topic");
+    handleTopic();
+  }
 
   return (
-    <div>
-      <MotorStatus statusJson={jawMsg} name="JAW"/>
-      <b></b><br />
-      <MotorStatus statusJson={torsoMsg} name = "TORSO" />
+    <div className="flex flex-row justify-evenly ">
+      <MotorStatus statusJson={torsoMsg} name="TORSO" isConnected={props.isConnected}/>
+      <MotorStatus statusJson={jawMsg} name = "JAW" isConnected={props.isConnected}/>
     </div>
 
   );

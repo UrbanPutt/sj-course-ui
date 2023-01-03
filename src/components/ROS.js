@@ -17,7 +17,10 @@ function useROS() {
     }
   })
 
+
+
   function checkConnection() {
+
     if (ros.ROS){
       if (ros.isConnected) {
         if (!ros.ROSConfirmedConnected && ros.ROS.isConnected) {
@@ -138,6 +141,7 @@ function useROS() {
         setROS(ros => ({ ...ros, ROSConfirmedConnected: false }));
         getTopics();
         getServices();
+        console.log("connected!")
       })
 
       ros.ROS.on('error', (error) => {  //gets a little annoying on the console, but probably ok for now

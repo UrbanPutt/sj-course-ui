@@ -18,7 +18,7 @@
     }
 
     .section{
-      @apply p-8;
+      @apply p-3;
     }
 
     .btn {
