@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react'
 import {useROS } from '../ROS'
 import MotorStatus from './MotorStatus';
 let added = false;
+let listener = null;
 
 function MotorStatusTopicProvider(props) {
-  const { createListener, topics,removeAllListeners, checkConnection} = useROS();
+  const { createListener, topics,removeAllListeners} = useROS();
 
   let topicMsgType = "";
   const topicPath = "/motorStatus";
@@ -14,9 +15,9 @@ function MotorStatusTopicProvider(props) {
   const [ torsoMsg, setTorsoMsg ] = useState('{}');
 
   
-  setInterval(()=>{
-    checkConnection();
-  },200)
+  //setInterval(()=>{
+    //checkConnection();
+  //},200)
   
 
 
@@ -33,6 +34,7 @@ function MotorStatusTopicProvider(props) {
       removeAllListeners();
       console.log("all listeners removed");
       added = false;
+      listener = null;
     };
 
   },[]);

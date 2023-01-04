@@ -5,7 +5,7 @@ export default function MotorStatus(props) {
   const status = props.statusJson ? JSON.parse(props.statusJson): JSON.parse("{}");
   const switches = status.switches ? status.switches : "";
   const statusBits = status.statusBits ? status.statusBits : "";
-  const isConnected = props.isConnected;
+
 
   return (
 
