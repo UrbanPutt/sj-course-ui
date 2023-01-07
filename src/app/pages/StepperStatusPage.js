@@ -1,14 +1,16 @@
 import FullscreenBtn from '../components/FullScreenBtn';
 import MotorStatus from '../components/examples/MotorStatus';
 import Header from '../components/Header';
-import { useROS } from '../components/ROS';
+import { useROS} from '../components/ROS';
 import React, { useEffect, useState } from 'react'
+
 
 let listenerMotorStatus = null;
 let added = false;
+
 export default function StepperStatusPage(){
 
-  const { isConnected, createListener, removeAllListeners} = useROS();
+  const { isConnected, createListener} = useROS();
   const topicPathMotorStatus = "/motorStatus";
   const topicMotorStatusMsgType = "diagnostic_msgs/msg/KeyValue";
 
@@ -44,13 +46,14 @@ export default function StepperStatusPage(){
     }
   }
 
+
   useEffect(() => {
 
     return() => {
-      removeAllListeners();
-      console.log("all listeners removed");
-      added = false;
-      listenerMotorStatus = null;
+      //removeAllListeners();
+      //console.log("all listeners removed");
+      //added = false;
+      //listenerMotorStatus = null;
     };
 
   },[]); //leave the array in despite the warning, it is needed for some reason

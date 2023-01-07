@@ -1,10 +1,87 @@
-import React from 'react'
+import React, {useState } from 'react'
+import ROSLIB from 'roslib'
+import { useROS} from '../../components/ROS';
 
+var publisherCmdVel = null;
 export default function MotorStatus(props) {
   
+  const [eventLogPrev, setEventLogPrev]=useState(" ");
+  const [eventLog, setEventLog]=useState(" ");
+  
+
   const status = props.statusJson ? JSON.parse(props.statusJson): JSON.parse("{}");
   const switches = status.switches ? status.switches : "";
   const statusBits = status.statusBits ? status.statusBits : "";
+
+  const { isConnected, createPublisher} = useROS();
+
+  var twist = new ROSLIB.Message({
+    linear: {
+      x: 0.0,
+      y: 0.0,
+      z: 0.0
+    },
+    angular: {
+      x: 0.0,
+      y: 0.0,
+      z: 0.0
+    }
+  });
+
+
+  if (publisherCmdVel === null && isConnected)
+  {
+    publisherCmdVel = createPublisher("/cmd_vel","geometry_msgs/msg/Twist");
+  }
+
+
+  function jogMotorPos(event){
+    console.log(event);
+    setEventLogPrev(eventLog);
+    setEventLog(String(event._reactName));
+    if(props.name==="JAW"){
+      twist.angular.y = 1.0;
+    }
+    else if(props.name==="TORSO"){
+      twist.angular.z = 1.0;
+    }
+    if (publisherCmdVel !== null && isConnected)
+    {
+      publisherCmdVel.publish(twist);
+    }
+  }
+
+  function jogMotorNeg(event){
+    console.log(event);
+    setEventLogPrev(eventLog);
+    setEventLog(String(event._reactName));
+    if(props.name==="JAW"){
+      twist.angular.y = -1.0;
+    }
+    else if(props.name==="TORSO"){
+      twist.angular.z = -1.0;
+    }
+    if (publisherCmdVel !== null && isConnected)
+    {
+      publisherCmdVel.publish(twist);
+    }
+  }
+
+  function stopMotor(event){
+    console.log(event);
+    setEventLogPrev(eventLog);
+    setEventLog(String(event._reactName));
+    if(props.name==="JAW"){
+      twist.angular.y = 0.0;
+    }
+    else if(props.name==="TORSO"){
+      twist.angular.z = 0.0;
+    }
+    if (publisherCmdVel !== null && isConnected)
+    {
+      publisherCmdVel.publish(twist);
+    }
+  }
 
 
   return (
@@ -13,19 +90,29 @@ export default function MotorStatus(props) {
       <b className="text-xl">{props.name}</b>
        <b></b><br />
       <b>Mode </b> {intToModeString(status.mode)}<br />
-      <b>Actual Position </b>{status.actualPosition} <br />
-      <b>Ref Position </b>{status.referencePosition} <br />
-      <b>Actual Velocity </b>{status.actualVelocity} <br />
-      <b>Ref Velocity </b>{status.referenceVelocity} <br />
+      <b>Act/Ref Pos </b>{status.actualPosition} / {status.referencePosition} <br />
+      <b>Act/Ref Vel </b>{status.actualVelocity} / {status.referenceVelocity}<br />
       <b>Switches </b>PosLimSw: {boolToOnOffString(switches.PositiveLimSw)} <br />
       <b></b>NegLimSw: {boolToOnOffString(switches.NegativeLimSw)} <br />
       <b></b>HomeSw: {boolToOnOffString(switches.HomeSw)} <br />
-      <b>Status Bits </b>AtPosition: {String(statusBits.AtPosition)} <br />
+      <b>Status Bits </b>AtPos: {String(statusBits.AtPosition)} <br />
       <b></b>Moving: {String(statusBits.Moving)} <br />
       <b></b>Enabled: {String(statusBits.Enabled)} <br />
       <b></b>Faulted: {String(statusBits.Faulted)} <br />
       <b></b>Ready: {String(statusBits.Ready)} <br />
       <b></b>Homed: {String(statusBits.Homed)} <br />
+
+      <button className="btn btn-blue w-30 mt-4 cursor-not-allowed select-none" 
+              onTouchStart={jogMotorPos} onTouchEnd={stopMotor} onTouchCancel={stopMotor} 
+              onMouseDown={jogMotorPos} onMouseUp={stopMotor} onMouseLeave={()=>{}}>
+        JOG+
+      </button>
+      <button className="btn btn-blue w-30 mt-4 mb-2 cursor-not-allowed select-none" 
+              onTouchStart={jogMotorNeg} onTouchEnd={stopMotor} onTouchCancel={stopMotor} 
+              onMouseDown={jogMotorNeg} onMouseUp={stopMotor} onMouseLeave={()=>{}} >
+        JOG-
+      </button>
+      <b></b>{eventLog}<br />
     </div>
     
   );

@@ -11,11 +11,16 @@ function useROS() {
   useEffect(() => {
     if (!ros.isConnected) {
       if(ros.autoconnect) {
-        console.log('autoconnecting');
         handleConnect();
       }
     }
+
+    return(()=>{
+      //handleDisconnect();
+    })
   })
+
+  
 
 
 
@@ -131,7 +136,18 @@ function useROS() {
     return newListener;
   }
 
+  function createPublisher(topic,msg_type){
+    var newPublisher = new ROSLIB.Topic({
+      ros: ros.ROS,
+      name: topic,
+      messageType: msg_type
+    });
+    console.log("Publisher created: " + newPublisher.name)
+    return newPublisher;
+  }
+
   const handleConnect = () => {
+
     try {
       ros.ROS.connect(ros.url)
       ros.ROS.on('connection', () => {
@@ -142,6 +158,10 @@ function useROS() {
         getServices();
         console.log("connected!")
       })
+
+      ros.ROS.on('close', ()=>{
+        console.log("connection closed with websocket");
+      });
 
       ros.ROS.on('error', (error) => {  //gets a little annoying on the console, but probably ok for now
         console.log(error);
@@ -184,12 +204,14 @@ function useROS() {
     console.log('Listener: ' + listener + ' is not a listener')
   }
 
+
   return {
     toggleConnection,
     changeUrl,
     getTopics,
     getServices,
     createListener,
+    createPublisher,
     toggleAutoconnect,
     removeAllListeners,
     removeListener,
