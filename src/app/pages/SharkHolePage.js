@@ -1,12 +1,14 @@
-import FullscreenBtn from '../FullScreenBtn';
-import MotorStatus from '../examples/MotorStatus';
-import Header from '../../components/Header';
-import { useROS } from '../ROS';
+import FullscreenBtn from '../components/FullScreenBtn';
+import Header from '../components/Header';
+import { useROS } from '../components/ROS';
 import React, { useEffect, useState } from 'react'
+import ExampleP5Sketch from '../components/ExampleP5Sketch';
+import { ReactP5Wrapper } from 'react-p5-wrapper';
+
 
 let listenerMotorStatus = null;
 let added = false;
-export default function StepperStatusPage(){
+export default function SharkHolePage(){
 
   const { isConnected, createListener, removeAllListeners} = useROS();
   const topicPathMotorStatus = "/motorStatus";
@@ -60,10 +62,7 @@ export default function StepperStatusPage(){
     <div className="h-screen w-screen">
       <Header />
       <div className="section w-screen justify-center">
-        <div className="flex flex-row justify-evenly ">
-          <MotorStatus statusJson={torsoMsg} name="TORSO" />
-          <MotorStatus statusJson={jawMsg} name = "JAW" />
-        </div>
+          <ReactP5Wrapper sketch={ExampleP5Sketch} torsoMsg={torsoMsg} jawMsg={jawMsg} />
       </div>
       <div className="fixed bottom-1 right-0 z-50">
           <FullscreenBtn />

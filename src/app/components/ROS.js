@@ -42,7 +42,6 @@ function useROS() {
     }
   }
 
-
   function toggleConnection() {
     if (ros.isConnected) {
       handleDisconnect();

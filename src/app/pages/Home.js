@@ -1,5 +1,5 @@
-import Header from '../../components/Header';
-import FullscreenBtn from '../FullScreenBtn';
+import Header from '../components/Header';
+import FullscreenBtn from '../components/FullScreenBtn';
 export default function Home(){
     return(
         <div className="h-screen w-screen">

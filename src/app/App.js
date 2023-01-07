@@ -1,8 +1,8 @@
 import {ROS} from './components/ROS'
 import { Route, Routes, Navigate } from 'react-router-dom'
-import StepperStatusPage from './components/pages/StepperStatusPage'
-import Home from './components/pages/Home';
-import SharkHolePage from './components/pages/SharkHolePage';
+import StepperStatusPage from './/pages/StepperStatusPage'
+import Home from './pages/Home';
+import SharkHolePage from './/pages/SharkHolePage';
 
 function App() {
 
