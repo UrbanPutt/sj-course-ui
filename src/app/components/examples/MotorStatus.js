@@ -86,7 +86,7 @@ export default function MotorStatus(props) {
 
   return (
 
-    <div className= "flex flex-col bg-gray-100 p-2 rounded-md w-5/12">
+    <div className= "flex flex-col bg-gray-100 p-2 mr-4 rounded-md w-5/12 md:w-1/4">
       <b className="text-xl">{props.name}</b>
        <b></b><br />
       <b>Mode </b> {intToModeString(status.mode)}<br />
@@ -102,12 +102,12 @@ export default function MotorStatus(props) {
       <b></b>Ready: {String(statusBits.Ready)} <br />
       <b></b>Homed: {String(statusBits.Homed)} <br />
 
-      <button className="btn btn-blue w-30 mt-4 cursor-not-allowed select-none" 
+      <button className="btn btn-blue w-32 mt-4 select-none" 
               onTouchStart={jogMotorPos} onTouchEnd={stopMotor} onTouchCancel={stopMotor} 
               onMouseDown={jogMotorPos} onMouseUp={stopMotor} onMouseLeave={()=>{}}>
         JOG+
       </button>
-      <button className="btn btn-blue w-30 mt-4 mb-2 cursor-not-allowed select-none" 
+      <button className="btn btn-blue w-32 mt-4 mb-2 select-none" 
               onTouchStart={jogMotorNeg} onTouchEnd={stopMotor} onTouchCancel={stopMotor} 
               onMouseDown={jogMotorNeg} onMouseUp={stopMotor} onMouseLeave={()=>{}} >
         JOG-

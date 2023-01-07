@@ -63,7 +63,7 @@ export default function StepperStatusPage(){
     <div className="h-screen w-screen">
       <Header />
       <div className="section w-screen justify-center">
-        <div className="flex flex-row justify-evenly ">
+        <div className="flex flex-row justify-evenly sm:justify-start ">
           <MotorStatus statusJson={torsoMsg} name="TORSO" />
           <MotorStatus statusJson={jawMsg} name = "JAW" />
         </div>
