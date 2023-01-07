@@ -5,8 +5,8 @@ import { useROS} from '../../components/ROS';
 var publisherCmdVel = null;
 export default function MotorStatus(props) {
   
-  const [eventLogPrev, setEventLogPrev]=useState(" ");
-  const [eventLog, setEventLog]=useState(" ");
+  //const [eventLogPrev, setEventLogPrev]=useState(" ");
+  //const [eventLog, setEventLog]=useState(" ");
   
 
   const status = props.statusJson ? JSON.parse(props.statusJson): JSON.parse("{}");
@@ -37,8 +37,8 @@ export default function MotorStatus(props) {
 
   function jogMotorPos(event){
     console.log(event);
-    setEventLogPrev(eventLog);
-    setEventLog(String(event._reactName));
+    //setEventLogPrev(eventLog);
+    //setEventLog(String(event._reactName));
     if(props.name==="JAW"){
       twist.angular.y = 1.0;
     }
@@ -53,8 +53,8 @@ export default function MotorStatus(props) {
 
   function jogMotorNeg(event){
     console.log(event);
-    setEventLogPrev(eventLog);
-    setEventLog(String(event._reactName));
+    //setEventLogPrev(eventLog);
+    //setEventLog(String(event._reactName));
     if(props.name==="JAW"){
       twist.angular.y = -1.0;
     }
@@ -69,8 +69,8 @@ export default function MotorStatus(props) {
 
   function stopMotor(event){
     console.log(event);
-    setEventLogPrev(eventLog);
-    setEventLog(String(event._reactName));
+    //setEventLogPrev(eventLog);
+    //setEventLog(String(event._reactName));
     if(props.name==="JAW"){
       twist.angular.y = 0.0;
     }
@@ -112,7 +112,6 @@ export default function MotorStatus(props) {
               onMouseDown={jogMotorNeg} onMouseUp={stopMotor} onMouseLeave={()=>{}} >
         JOG-
       </button>
-      <b></b>{eventLog}<br />
     </div>
     
   );
