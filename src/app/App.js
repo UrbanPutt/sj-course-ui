@@ -5,9 +5,7 @@ import Home from './pages/Home';
 import SharkHolePage from './/pages/SharkHolePage';
 
 function App() {
-
-
-
+  
   return (
     <ROS>
         <Routes>

@@ -20,9 +20,6 @@ function useROS() {
     })
   })
 
-  
-
-
 
   function checkConnection() {
 
@@ -116,6 +113,16 @@ function useROS() {
     return ros.services;
   }
 
+  function checkExistingListeners(newListener){
+    for (var listener in ros.listeners) {
+      if (newListener.name === ros.listeners[listener].name) {
+        
+        return [true, listener];
+      }
+    }
+    return [false, -1];
+  }
+
   function createListener(topic, msg_type, to_queue, compression_type) {
     var newListener = new ROSLIB.Topic({
       ros: ros.ROS,
@@ -124,16 +131,26 @@ function useROS() {
       queue_length: to_queue,
       compression: compression_type,
     })
+    const[alreadyExists, index]= checkExistingListeners(newListener)
+    if (alreadyExists) {
+        console.log('Listener already available in ros.listeners');
+        return ros.listeners[index];
+    }
+    else{
+      ros.listeners.push(newListener);
+      console.log('Listener ' + newListener.name + ' created');
+      return newListener;
+    }
+  }
 
-    for (var listener in ros.listeners) {
-      if (newListener.name === ros.listeners[listener].name) {
-        console.log('Listener already available in ros.listeners[' + listener + ']');
-        return ros.listeners[listener];
+  function checkExistingPublishers(newPublisher){
+    for (var publisher in ros.publishers) {
+      if (newPublisher.name === ros.publishers[publisher].name) {
+  
+        return [true, publisher];
       }
     }
-    ros.listeners.push(newListener);
-    console.log('Listener ' + newListener.name + ' created');
-    return newListener;
+    return [false, -1];
   }
 
   function createPublisher(topic,msg_type){
@@ -142,13 +159,22 @@ function useROS() {
       name: topic,
       messageType: msg_type
     });
-    console.log("Publisher created: " + newPublisher.name)
+    const[alreadyExists, index] = checkExistingPublishers(newPublisher)
+    if (alreadyExists) {
+      console.log('Publisher already available in ros.publishers');
+      return ros.publishers[index];
+  }
+  else{
+    ros.publishers.push(newPublisher);
+    console.log('Publisher ' + newPublisher.name + ' created');
     return newPublisher;
+  }
   }
 
   const handleConnect = () => {
 
     try {
+      console.log("connecting to url: " + ros.url);
       ros.ROS.connect(ros.url)
       ros.ROS.on('connection', () => {
         // console.log(connect)
@@ -168,7 +194,7 @@ function useROS() {
         console.log("roslibjs failed to connect");
       })
     } catch (e) {
-      console.log(e);
+      console.log("error when trying to connect:" + e);
     }
   }
 

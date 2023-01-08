@@ -2,7 +2,7 @@ import FullscreenBtn from '../components/FullScreenBtn';
 import Header from '../components/Header';
 import { useROS } from '../components/ROS';
 import ROSLIB from 'roslib'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import ExampleP5Sketch from '../components/ExampleP5Sketch';
 import { ReactP5Wrapper } from 'react-p5-wrapper';
 
@@ -12,15 +12,12 @@ let publisherCmdVel = null;
 let added = false;
 export default function SharkHolePage(){
 
-  const { isConnected, createListener,createPublisher} = useROS();
+  const { isConnected, createListener, createPublisher} = useROS();
   const topicPathMotorStatus = "/motorStatus";
   const topicMotorStatusMsgType = "diagnostic_msgs/msg/KeyValue";
 
   const [ jawMsg, setJawMsg ] = useState('{}');
   const [ torsoMsg, setTorsoMsg ] = useState('{}');
-
-
-
 
   const handleMsg = (msg) => {
     //console.log("handleMsg: " + msg.value);
@@ -48,17 +45,7 @@ export default function SharkHolePage(){
     }
   }
 
-  useEffect(() => {
 
-    return() => {
-      //removeAllListeners();
-      //console.log("all listeners removed");
-      //added = false;
-      //listenerMotorStatus = null;
-    };
-
-  },[]); //leave the array in despite the warning, it is needed for some reason
-  
   var twist = new ROSLIB.Message({
     linear: {
       x: 0.0,

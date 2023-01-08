@@ -2,22 +2,24 @@ import React, { createContext, useState } from 'react'
 import PropTypes from 'prop-types'
 import ROSLIB from 'roslib'
 
-const rosObj = {
-  ROS: new ROSLIB.Ros(),
-  url: "ws://98.53.134.144:9090",
-  //url: "ws://0.0.0.0:9090",
-  //url: "ws://jakers-ThinkPad.local:9090",
-  //url: "ws://ubuntu-sharkhole-raspi:9090",
-  //url: "ws://192.168.0.245:9090",
-  //url: "ws://192.168.0.36:9090",
+  //const startUrl: "ws://0.0.0.0:9090",
+  //const startUrl: "ws://jakers-ThinkPad.local:9090",
+  //const startUrl: "ws://ubuntu-sharkhole-raspi:9090",
+  //const startUrl: "ws://192.168.0.245:9090",
+  //const startUrl: "ws://192.168.0.36:9090",
+const startUrl = "ws://98.53.134.144:9090";
 
-  
+const rosObj = {
+  url: startUrl,
+  ROS: new ROSLIB.Ros(startUrl),
+
   isConnected: false,
   ROSConfirmedConnected: false,
   autoconnect: true,
   topics: [],
   services:[],
   listeners: [],
+  publishers: [],
 }
 
 const ROSContext = createContext([{}, () => {}]);

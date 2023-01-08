@@ -36,9 +36,7 @@ export default function MotorStatus(props) {
 
 
   function jogMotorPos(event){
-    console.log(event);
-    //setEventLogPrev(eventLog);
-    //setEventLog(String(event._reactName));
+
     if(props.name==="JAW"){
       twist.angular.y = 1.0;
     }
@@ -52,9 +50,7 @@ export default function MotorStatus(props) {
   }
 
   function jogMotorNeg(event){
-    console.log(event);
-    //setEventLogPrev(eventLog);
-    //setEventLog(String(event._reactName));
+
     if(props.name==="JAW"){
       twist.angular.y = -1.0;
     }
@@ -68,9 +64,7 @@ export default function MotorStatus(props) {
   }
 
   function stopMotor(event){
-    console.log(event);
-    //setEventLogPrev(eventLog);
-    //setEventLog(String(event._reactName));
+
     if(props.name==="JAW"){
       twist.angular.y = 0.0;
     }
@@ -90,8 +84,8 @@ export default function MotorStatus(props) {
       <b className="text-xl">{props.name}</b>
        <b></b><br />
       <b>Mode </b> {intToModeString(status.mode)}<br />
-      <b>Act/Ref Pos </b>{status.actualPosition} / {status.referencePosition} <br />
-      <b>Act/Ref Vel </b>{status.actualVelocity} / {status.referenceVelocity}<br />
+      <b>Act/Ref Position </b>{status.actualPosition} / {status.referencePosition} <br />
+      <b>Act/Ref Velocity </b>{status.actualVelocity} / {status.referenceVelocity}<br />
       <b>Switches </b>PosLimSw: {boolToOnOffString(switches.PositiveLimSw)} <br />
       <b></b>NegLimSw: {boolToOnOffString(switches.NegativeLimSw)} <br />
       <b></b>HomeSw: {boolToOnOffString(switches.HomeSw)} <br />
