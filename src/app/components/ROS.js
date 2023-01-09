@@ -8,6 +8,10 @@ import PropTypes from 'prop-types'
 function useROS() {
   const [ros, setROS] = useContext(ROSContext);
 
+  if(!ros.isConnected){
+    console.log("ros is disconnected");
+  }
+
   useEffect(() => {
     if (!ros.isConnected) {
       if(ros.autoconnect) {
@@ -18,7 +22,7 @@ function useROS() {
     return(()=>{
       //handleDisconnect();
     })
-  })
+  },[ros])
 
 
   function checkConnection() {
@@ -43,6 +47,15 @@ function useROS() {
       console.log("Initial connection not established yet")
     }
   }
+
+  setInterval(()=> {
+    //checkConnection();
+    if(!ros.isConnected){
+      //console.log("disconnected from ros, retrying connect");
+      //handleConnect();
+    }
+    
+  },3000);
 
   function toggleConnection() {
     if (ros.isConnected) {
@@ -132,15 +145,17 @@ function useROS() {
       compression: compression_type,
     })
     const[alreadyExists, index]= checkExistingListeners(newListener)
-    if (alreadyExists) {
+    if (alreadyExists && false) {
         console.log('Listener already available in ros.listeners');
         return ros.listeners[index];
     }
     else{
       ros.listeners.push(newListener);
       console.log('Listener ' + newListener.name + ' created');
+      console.log("num of listeners: " + String(ros.listeners.length));
       return newListener;
     }
+    
   }
 
   function checkExistingPublishers(newPublisher){
@@ -186,29 +201,36 @@ function useROS() {
       })
 
       ros.ROS.on('close', ()=>{
+        resetData(); 
         console.log("connection closed with websocket");
       });
 
       ros.ROS.on('error', (error) => {  //gets a little annoying on the console, but probably ok for now
         console.log(error);
+        resetData(); 
         console.log("roslibjs failed to connect");
       })
     } catch (e) {
+      resetData(); 
       console.log("error when trying to connect:" + e);
     }
   }
 
   const handleDisconnect = () => {
     try {
+      resetData(); 
       ros.ROS.close();
-      setROS(ros => ({ ...ros, isConnected: false }));
-      setROS(ros => ({ ...ros, topics: [] }));
-      setROS(ros => ({ ...ros, listeners: [] }));
-      setROS(ros => ({ ...ros, ROSConfirmedConnected: false }));
     } catch (e) {
       console.log(e);
     }
     console.log('Disconnected');
+  }
+
+  function resetData()  {
+    setROS(ros => ({ ...ros, isConnected: false }));
+    setROS(ros => ({ ...ros, topics: [] }));
+    setROS(ros => ({ ...ros, listeners: [] }));
+    setROS(ros => ({ ...ros, ROSConfirmedConnected: false }));
   }
 
   const removeAllListeners = () => {
@@ -224,10 +246,24 @@ function useROS() {
         console.log('Listener: ' + listener.name + ' is removed')
         ros.listeners.splice(mlistener, 1)
         listener.removeAllListeners();
+        console.log("num of listeners: " + String(ros.listeners.length));
         return
       }
     }
     console.log('Listener: ' + listener + ' is not a listener')
+  }
+
+  function removePublisher(publisher) {
+    for (var index in ros.publishers) {
+      if (publisher.name === ros.publishers[index].name) {
+        console.log('Publisher: ' + publisher.name + ' is removed')
+        ros.publishers.splice(index, 1)
+        //listener.removeAllListeners();
+        console.log("num of publishers: " + String(ros.publishers.length));
+        return
+      }
+    }
+    console.log('Publisher: ' + publisher + ' is not a publisher')
   }
 
 
@@ -241,6 +277,7 @@ function useROS() {
     toggleAutoconnect,
     removeAllListeners,
     removeListener,
+    removePublisher,
     checkConnection,
     ros: ros.ROS,
     isConnected: ros.isConnected,

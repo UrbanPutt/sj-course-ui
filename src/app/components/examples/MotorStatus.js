@@ -1,19 +1,18 @@
-import React from 'react'
+import React, {useEffect,useState} from 'react'
 import ROSLIB from 'roslib'
 import { useROS} from '../../components/ROS';
 
-var publisherCmdVel = null;
+
 export default function MotorStatus(props) {
-  
   //const [eventLogPrev, setEventLogPrev]=useState(" ");
   //const [eventLog, setEventLog]=useState(" ");
-  
 
-  const status = props.statusJson ? JSON.parse(props.statusJson): JSON.parse("{}");
+  var status = props.statusJson ? JSON.parse(props.statusJson): JSON.parse("{}");
   const switches = status.switches ? status.switches : "";
   const statusBits = status.statusBits ? status.statusBits : "";
 
   const { isConnected, createPublisher} = useROS();
+  const [publisherCmdVel,setPublisherCmdVel]=useState(null);
 
   var twist = new ROSLIB.Message({
     linear: {
@@ -29,11 +28,24 @@ export default function MotorStatus(props) {
   });
 
 
-  if (publisherCmdVel === null && isConnected)
-  {
-    publisherCmdVel = createPublisher("/cmd_vel","geometry_msgs/msg/Twist");
-  }
+  useEffect(() => {
 
+
+    return() => {
+      //removeAllListeners();
+      //console.log("all listeners removed");
+      //added = false;
+      //listenerMotorStatus = null;
+      setPublisherCmdVel(null);
+    };
+
+  },[]); //leave the array in despite the warning, it is needed for some reason
+  
+
+  if (isConnected && publisherCmdVel === null)
+  {
+    setPublisherCmdVel(createPublisher("/cmd_vel","geometry_msgs/msg/Twist"));
+  }
 
   function jogMotorPos(event){
 
@@ -76,7 +88,6 @@ export default function MotorStatus(props) {
       publisherCmdVel.publish(twist);
     }
   }
-
 
   return (
 

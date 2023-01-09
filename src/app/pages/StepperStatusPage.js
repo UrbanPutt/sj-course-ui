@@ -6,22 +6,18 @@ import React, { useEffect, useState } from 'react'
 
 
 let listenerMotorStatus = null;
-let added = false;
 
 export default function StepperStatusPage(){
 
-  const { isConnected, createListener} = useROS();
+  const { isConnected, createListener, removeListener} = useROS();
   const topicPathMotorStatus = "/motorStatus";
   const topicMotorStatusMsgType = "diagnostic_msgs/msg/KeyValue";
 
   const [ jawMsg, setJawMsg ] = useState('{}');
   const [ torsoMsg, setTorsoMsg ] = useState('{}');
 
-
-
-
   const handleMsg = (msg) => {
-    //console.log("handleMsg: " + msg.value);
+    console.log("handleMsg: steppers");
     if (msg.key === 'J')
     {
       //console.log(String(msg.value))
@@ -34,26 +30,22 @@ export default function StepperStatusPage(){
     
   }
 
-  if (isConnected & !added){
+  if (isConnected & listenerMotorStatus === null)
+  {
     listenerMotorStatus = createListener( topicPathMotorStatus,
       topicMotorStatusMsgType,
       Number(0),
       'none');
-    if (listenerMotorStatus != null){
-        //console.log("listener added and topic is good");
-        listenerMotorStatus.subscribe(handleMsg); //adds handleMsg as a callback function anytime new msg on topic is received
-        added = true;
-    }
+      listenerMotorStatus.subscribe(handleMsg);
+    console.log("subscribe: steppers")
   }
-
 
   useEffect(() => {
 
     return() => {
-      //removeAllListeners();
-      //console.log("all listeners removed");
-      //added = false;
-      //listenerMotorStatus = null;
+      removeListener(listenerMotorStatus);
+      listenerMotorStatus = null;
+      console.log("cleanup: steppers");
     };
 
   },[]); //leave the array in despite the warning, it is needed for some reason

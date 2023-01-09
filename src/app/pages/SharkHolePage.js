@@ -2,17 +2,17 @@ import FullscreenBtn from '../components/FullScreenBtn';
 import Header from '../components/Header';
 import { useROS } from '../components/ROS';
 import ROSLIB from 'roslib'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ExampleP5Sketch from '../components/ExampleP5Sketch';
 import { ReactP5Wrapper } from 'react-p5-wrapper';
 
 
 let listenerMotorStatus = null;
 let publisherCmdVel = null;
-let added = false;
+
 export default function SharkHolePage(){
 
-  const { isConnected, createListener, createPublisher} = useROS();
+  const { isConnected, createListener, createPublisher, removeListener} = useROS();
   const topicPathMotorStatus = "/motorStatus";
   const topicMotorStatusMsgType = "diagnostic_msgs/msg/KeyValue";
 
@@ -20,10 +20,9 @@ export default function SharkHolePage(){
   const [ torsoMsg, setTorsoMsg ] = useState('{}');
 
   const handleMsg = (msg) => {
-    //console.log("handleMsg: " + msg.value);
+    console.log("handleMsg: shark");
     if (msg.key === 'J')
     {
-      //console.log(String(msg.value))
       setJawMsg(String(msg.value));
 
     }
@@ -31,18 +30,6 @@ export default function SharkHolePage(){
       setTorsoMsg(String(msg.value));
     }
     
-  }
-
-  if (isConnected & !added){
-    listenerMotorStatus = createListener( topicPathMotorStatus,
-      topicMotorStatusMsgType,
-      Number(0),
-      'none');
-    if (listenerMotorStatus != null){
-        //console.log("listener added and topic is good");
-        listenerMotorStatus.subscribe(handleMsg); //adds handleMsg as a callback function anytime new msg on topic is received
-        added = true;
-    }
   }
 
 
@@ -59,10 +46,7 @@ export default function SharkHolePage(){
     }
   });
 
-  if (publisherCmdVel === null && isConnected)
-  {
-    publisherCmdVel = createPublisher("/cmd_vel","geometry_msgs/msg/Twist");
-  }
+
 
 
   function jogTorsoMotorPos(event){
@@ -91,6 +75,27 @@ export default function SharkHolePage(){
     }
   }
 
+  useEffect(() => {
+
+    return() => {
+      removeListener(listenerMotorStatus);
+      listenerMotorStatus = null;
+      console.log("cleanup: shark");
+    };
+
+  },[]); //leave the array in despite the warning, it is needed for some reason
+
+
+  if (isConnected & listenerMotorStatus === null)
+  {
+    listenerMotorStatus = createListener( topicPathMotorStatus,
+      topicMotorStatusMsgType,
+      Number(0),
+      'none');
+      listenerMotorStatus.subscribe(handleMsg);
+    publisherCmdVel = createPublisher("/cmd_vel","geometry_msgs/msg/Twist");
+    console.log("subscribe: shark")
+  }
 
   return(
     <div className="h-screen w-screen">
