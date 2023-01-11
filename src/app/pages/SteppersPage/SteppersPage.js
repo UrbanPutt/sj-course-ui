@@ -1,13 +1,13 @@
-import FullscreenBtn from '../components/FullScreenBtn';
-import MotorStatus from '../components/examples/MotorStatus';
-import Header from '../components/Header';
-import { useROS} from '../components/ROS';
+import FullscreenBtn from '../../components/FullScreenBtn';
+import MotorStatus from './MotorStatus';
+import Header from '../../components/Header';
+import { useROS} from '../../components/ROS/ROS';
 import React, { useEffect, useState } from 'react'
 
 
 let listenerMotorStatus = null;
 
-export default function StepperStatusPage(){
+export default function SteppersPage(){
 
   const { isConnected, createListener, removeListener} = useROS();
   const topicPathMotorStatus = "/motorStatus";
@@ -51,7 +51,7 @@ export default function StepperStatusPage(){
   },[]); //leave the array in despite the warning, it is needed for some reason
   
 
-  console.log(torsoMsg);
+  //console.log(torsoMsg);
   
   return(
     <div className="h-screen w-screen">

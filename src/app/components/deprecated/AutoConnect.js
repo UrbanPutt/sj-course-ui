@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useROS } from './ROS'
+import { useROS } from '../ROS'
 
 
 
@@ -7,7 +7,7 @@ function AutoConnect() {
   const { autoconnect, toggleAutoconnect, url, changeUrl} = useROS();
   //const defaultURL = "ws://192.168.0.219:9090"; //jakers-linux
   //const defaultURL = "ws://192.168.0.245:9090"; //raspberry pi
-  const defaultURL = "ws://98.53.134.144:9090"; //internet access to websocket on robotDungeon network
+  //const defaultURL = "ws://98.53.134.144:9090"; //internet access to websocket on robotDungeon network
   //const defaultURL = process.env.WS_URL;
 
  

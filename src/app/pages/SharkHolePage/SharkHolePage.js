@@ -1,9 +1,9 @@
-import FullscreenBtn from '../components/FullScreenBtn';
-import Header from '../components/Header';
-import { useROS } from '../components/ROS';
+import FullscreenBtn from '../../components/FullScreenBtn';
+import Header from '../../components/Header';
+import { useROS } from '../../components/ROS/ROS';
 import ROSLIB from 'roslib'
 import React, { useEffect, useState } from 'react'
-import ExampleP5Sketch from '../components/ExampleP5Sketch';
+import ExampleP5Sketch from './ExampleP5Sketch';
 import { ReactP5Wrapper } from 'react-p5-wrapper';
 
 
@@ -29,9 +29,7 @@ export default function SharkHolePage(){
     else if (msg.key === 'T'){
       setTorsoMsg(String(msg.value));
     }
-    
   }
-
 
   var twist = new ROSLIB.Message({
     linear: {
@@ -45,9 +43,6 @@ export default function SharkHolePage(){
       z: 0.0
     }
   });
-
-
-
 
   function jogTorsoMotorPos(event){
     twist.angular.z = 1.0;

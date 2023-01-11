@@ -1,6 +1,6 @@
 import Header from '../components/Header';
 import FullscreenBtn from '../components/FullScreenBtn';
-import {useROS} from '../components/ROS';
+import {useROS} from '../components/ROS/ROS';
 import React, { useEffect, useState } from 'react'
 
 let listenerConnectionStatus = null;
@@ -17,41 +17,48 @@ export default function Home(){
         console.log("handleMsg: home");
         if (msg.key === 'serial')
         {   
-            console.log(msg.value);
-            setSerialConnectionStatus(msg.value === 'True' || msg.value === 'true');
+            //console.log(msg.value === 'True');
+            setSerialConnectionStatus(msg.value === 'True');
         }  
-      }
+    }
 
-      useEffect(() => {
+    if(!isConnected & serialConnectionStatus){
+        setSerialConnectionStatus(false);
+    }
+    else if(isConnected & !serialConnectionStatus){
+        console.log("stepper controller serial connection is disconnected");
+    }
 
-        return() => {
-          removeListener(listenerConnectionStatus);
-          listenerConnectionStatus = null;
-          console.log("cleanup: shark");
-        };
+    useEffect(() => {
+
+    return() => {
+        removeListener(listenerConnectionStatus);
+        listenerConnectionStatus = null;
+        console.log("cleanup: shark");
+    };
+
+    },[]); //leave the array in despite the warning, it is needed for some reason
+
+
+    if (isConnected & listenerConnectionStatus === null)
+    {
+    listenerConnectionStatus = createListener( topicPath,
+        topicMsgType,
+        Number(0),
+        'none');
+        listenerConnectionStatus.subscribe(handleMsg);
+    console.log("subscribe: home")
+    }
+
     
-      },[]); //leave the array in despite the warning, it is needed for some reason
-    
-    
-      if (isConnected & listenerConnectionStatus === null)
-      {
-        listenerConnectionStatus = createListener( topicPath,
-          topicMsgType,
-          Number(0),
-          'none');
-          listenerConnectionStatus.subscribe(handleMsg);
-        console.log("subscribe: home")
-      }
+    const websockets = [homeUrl, shopUrl];
 
-      
-      const websockets = [homeUrl, shopUrl];
-
-      let optionItems = websockets.map((item) =>
-        <option key={item}>{item}</option>
-        );
+    let optionItems = websockets.map((item) =>
+    <option key={item}>{item}</option>
+    );
 
     const handleChange = (e) => {
-        console.log("Websocket Selected!!" + e.target.value);
+        console.log("Websocket Selected: " + e.target.value);
         setUrl(e.target.value);
         changeUrl(e.target.value);
         }

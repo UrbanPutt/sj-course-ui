@@ -1,6 +1,15 @@
 # Getting Started with San Jose Course User Interface
 
 
+## Automatic Services upon boot-up
+
+systemd startup.service: starts joystick.launch.py
+
+systemd sj-course-ui.service: starts npm start in the sj-course-ui repo
+
+
+
+
 ## Available Scripts
 
 In the project directory, you can run:

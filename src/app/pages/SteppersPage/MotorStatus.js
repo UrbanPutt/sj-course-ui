@@ -1,7 +1,8 @@
 import React, {useEffect,useState} from 'react'
 import ROSLIB from 'roslib'
-import { useROS} from '../../components/ROS';
+import { useROS} from '../../components/ROS/ROS';
 
+let publisherCmdVel = null;
 
 export default function MotorStatus(props) {
   //const [eventLogPrev, setEventLogPrev]=useState(" ");
@@ -12,7 +13,7 @@ export default function MotorStatus(props) {
   const statusBits = status.statusBits ? status.statusBits : "";
 
   const { isConnected, createPublisher} = useROS();
-  const [publisherCmdVel,setPublisherCmdVel]=useState(null);
+  //const [publisherCmdVel,setPublisherCmdVel]=useState(null);
 
   var twist = new ROSLIB.Message({
     linear: {
@@ -32,11 +33,7 @@ export default function MotorStatus(props) {
 
 
     return() => {
-      //removeAllListeners();
-      //console.log("all listeners removed");
-      //added = false;
-      //listenerMotorStatus = null;
-      setPublisherCmdVel(null);
+        //cleanup methods
     };
 
   },[]); //leave the array in despite the warning, it is needed for some reason
@@ -44,7 +41,7 @@ export default function MotorStatus(props) {
 
   if (isConnected && publisherCmdVel === null)
   {
-    setPublisherCmdVel(createPublisher("/cmd_vel","geometry_msgs/msg/Twist"));
+    publisherCmdVel = createPublisher("/cmd_vel","geometry_msgs/msg/Twist");
   }
 
   function jogMotorPos(event){
@@ -89,6 +86,9 @@ export default function MotorStatus(props) {
     }
   }
 
+  
+  
+
   return (
 
     <div className= "flex flex-col bg-gray-100 p-2 mr-4 rounded-md w-5/12 md:w-1/4">
@@ -100,12 +100,12 @@ export default function MotorStatus(props) {
       <b>Switches </b>PosLimSw: {boolToOnOffString(switches.PositiveLimSw)} <br />
       <b></b>NegLimSw: {boolToOnOffString(switches.NegativeLimSw)} <br />
       <b></b>HomeSw: {boolToOnOffString(switches.HomeSw)} <br />
-      <b>Status Bits </b>AtPos: {String(statusBits.AtPosition)} <br />
-      <b></b>Moving: {String(statusBits.Moving)} <br />
-      <b></b>Enabled: {String(statusBits.Enabled)} <br />
-      <b></b>Faulted: {String(statusBits.Faulted)} <br />
-      <b></b>Ready: {String(statusBits.Ready)} <br />
-      <b></b>Homed: {String(statusBits.Homed)} <br />
+      <b>Status Bits </b>AtPos: {boolToStatusBit(statusBits.AtPosition)} <br />
+      <b></b>Moving: {boolToStatusBit(statusBits.Moving)} <br />
+      <b></b>Enabled: {boolToStatusBit(statusBits.Enabled)} <br />
+      <b></b>Faulted: {boolToStatusBit(statusBits.Faulted)} <br />
+      <b></b>Ready: {boolToStatusBit(statusBits.Ready)} <br />
+      <b></b>Homed: {boolToStatusBit(statusBits.Homed)} <br />
 
       <button className="btn btn-blue w-32 mt-4 select-none" 
               onTouchStart={jogMotorPos} onTouchEnd={stopMotor} onTouchCancel={stopMotor} 
@@ -123,7 +123,11 @@ export default function MotorStatus(props) {
 }
 
 function boolToOnOffString(x){
-  return x ? "on":"off"
+  return x ? "on":"off";
+}
+
+function boolToStatusBit(x){
+  return String(x) !== 'undefined' ? String(x) : "-";
 }
 
 function intToModeString(x){
@@ -146,14 +150,3 @@ function intToModeString(x){
   }
 
 }
-
-/*
-enum Mode{
-  DISABLED=0,
-  IDLE=1,
-  RUNNING=2,
-  HOMING=3,
-  STOPPING=4,
-  ERROR=9,
-}
-*/
