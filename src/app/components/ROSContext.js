@@ -7,8 +7,8 @@ import ROSLIB from 'roslib'
 //const startUrl: "ws://ubuntu-sharkhole-raspi:9090",
 //const startUrl: "ws://192.168.0.245:9090",
 //const startUrl: "ws://192.168.0.36:9090",
-//const startUrl = "ws://98.53.134.144:9090"; //home
-const startUrl = "ws://174.29.180.255:9090"; //urban putt shop in denver
+const startUrl = "ws://98.53.134.144:9090"; //home
+//const startUrl = "ws://174.29.180.255:9090"; //urban putt shop in denver
 
 const rosObj = {
   url: startUrl,
