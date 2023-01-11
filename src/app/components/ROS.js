@@ -74,7 +74,12 @@ function useROS() {
   }
 
   function changeUrl(new_url) {
-    setROS(ros => ({ ...ros, url: new_url }));
+    if(new_url !== ros.url){
+      handleDisconnect();
+      setROS(ros => ({ ...ros, url: new_url }));
+      //handleConnect();
+    }
+    
   }
 
   function getTopics() {

@@ -51,6 +51,8 @@ export default function StepperStatusPage(){
   },[]); //leave the array in despite the warning, it is needed for some reason
   
 
+  console.log(torsoMsg);
+  
   return(
     <div className="h-screen w-screen">
       <Header />
