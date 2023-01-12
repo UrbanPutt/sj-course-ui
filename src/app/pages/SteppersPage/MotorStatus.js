@@ -87,8 +87,6 @@ export default function MotorStatus(props) {
   }
 
   
-  
-
   return (
 
     <div className= "flex flex-col bg-gray-100 p-2 mr-4 rounded-md w-5/12 md:w-1/4">
@@ -96,7 +94,7 @@ export default function MotorStatus(props) {
        <b></b><br />
       <b>Mode </b> {intToModeString(status.mode)}<br />
       <b>Act/Ref Position </b>{status.actualPosition} / {status.referencePosition} <br />
-      <b>Act/Ref Velocity </b>{status.actualVelocity} / {status.referenceVelocity}<br />
+      <b>Act/Ref Velocity </b>{parseFloat(status.actualVelocity).toFixed(1)} / {parseFloat(status.referenceVelocity).toFixed(1)}<br />
       <b>Switches </b>PosLimSw: {boolToOnOffString(switches.PositiveLimSw)} <br />
       <b></b>NegLimSw: {boolToOnOffString(switches.NegativeLimSw)} <br />
       <b></b>HomeSw: {boolToOnOffString(switches.HomeSw)} <br />

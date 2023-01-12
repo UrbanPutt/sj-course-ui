@@ -31,11 +31,11 @@ export default function Home(){
 
     useEffect(() => {
 
-    return() => {
-        removeListener(listenerConnectionStatus);
-        listenerConnectionStatus = null;
-        console.log("cleanup: shark");
-    };
+        return() => {
+            removeListener(listenerConnectionStatus);
+            listenerConnectionStatus = null;
+            console.log("cleanup: shark");
+        };
 
     },[]); //leave the array in despite the warning, it is needed for some reason
 
