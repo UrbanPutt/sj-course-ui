@@ -47,10 +47,10 @@ export default function MotorStatus(props) {
   function jogMotorPos(event){
 
     if(props.name==="JAW"){
-      twist.angular.y = 1.0;
+      twist.angular.y = 0.5;
     }
     else if(props.name==="TORSO"){
-      twist.angular.z = 1.0;
+      twist.angular.z = 0.5;
     }
     if (publisherCmdVel !== null && isConnected)
     {
@@ -61,10 +61,10 @@ export default function MotorStatus(props) {
   function jogMotorNeg(event){
 
     if(props.name==="JAW"){
-      twist.angular.y = -1.0;
+      twist.angular.y = -0.5;
     }
     else if(props.name==="TORSO"){
-      twist.angular.z = -1.0;
+      twist.angular.z = -0.5;
     }
     if (publisherCmdVel !== null && isConnected)
     {

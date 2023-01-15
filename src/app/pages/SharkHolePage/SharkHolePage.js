@@ -6,8 +6,9 @@ import React, { useEffect, useState } from 'react'
 import ExampleP5Sketch from './ExampleP5Sketch';
 import { ReactP5Wrapper } from 'react-p5-wrapper';
 
-
+//DEFINE LISTENERS AND PUBLISHERS
 let listenerMotorStatus = null;
+let listenerJointState = null;
 let publisherCmdVel = null;
 
 export default function SharkHolePage(){
@@ -15,9 +16,16 @@ export default function SharkHolePage(){
   const { isConnected, createListener, createPublisher, removeListener} = useROS();
   const topicPathMotorStatus = "/motorStatus";
   const topicMotorStatusMsgType = "diagnostic_msgs/msg/KeyValue";
+  const topicPathJointState = "/jointState";
+  const topicJointStateMsgType = "sensor_msgs/msg/JointState";
 
   const [ jawMsg, setJawMsg ] = useState('{}');
   const [ torsoMsg, setTorsoMsg ] = useState('{}');
+  
+
+  const [jointStateMsg, setJointStateMsg] = useState('');
+  const [torsoVelDeg, setTorsoVelDeg ] = useState('0.0');
+
 
   const handleMsg = (msg) => {
     console.log("handleMsg: shark");
@@ -28,6 +36,21 @@ export default function SharkHolePage(){
     }
     else if (msg.key === 'T'){
       setTorsoMsg(String(msg.value));
+    }
+  }
+
+
+  const handleJointStateMsg = (msg) => {
+    //console.log("jointState msg: ");
+    //console.log(msg);
+    
+
+    if(msg.name[0] === "torso_joint"){
+      setJointStateMsg(msg);
+      const torsoPosDeg = msg.position[0];
+      const torsoPosRad = torsoPosDeg*Math.PI/180.0; //convert to radians
+      console.log("torsoVel: " + String(msg.velocity[0]));
+      setTorsoVelDeg(msg.velocity[0]);
     }
   }
 
@@ -83,11 +106,24 @@ export default function SharkHolePage(){
 
   if (isConnected & listenerMotorStatus === null)
   {
-    listenerMotorStatus = createListener( topicPathMotorStatus,
+    listenerMotorStatus = createListener( 
+      topicPathMotorStatus,
       topicMotorStatusMsgType,
       Number(0),
       'none');
       listenerMotorStatus.subscribe(handleMsg);
+    //publisherCmdVel = createPublisher("/cmd_vel","geometry_msgs/msg/Twist");
+    //console.log("subscribe: shark")
+  }
+
+  if (isConnected & listenerJointState=== null)
+  {
+    listenerJointState = createListener( 
+      topicPathJointState,
+      topicJointStateMsgType,
+      Number(0),
+      'none');
+      listenerJointState.subscribe(handleJointStateMsg);
     publisherCmdVel = createPublisher("/cmd_vel","geometry_msgs/msg/Twist");
     console.log("subscribe: shark")
   }
@@ -96,8 +132,9 @@ export default function SharkHolePage(){
     <div className="h-screen w-screen">
       <Header />
       <div className="section w-screen justify-center">
-          <ReactP5Wrapper sketch={ExampleP5Sketch} torsoMsg={torsoMsg} jawMsg={jawMsg} />
+          <ReactP5Wrapper sketch={ExampleP5Sketch} torsoMsg={torsoMsg} jawMsg={jawMsg} jointStateMsg={jointStateMsg} />
       </div>
+      <p>Torso Vel: {torsoVelDeg}</p>
       <div className="section">
         <button className="btn btn-blue w-32 m-4 select-none" 
                 onTouchStart={jogTorsoMotorPos} onTouchEnd={stopMotor} onTouchCancel={stopMotor} 
