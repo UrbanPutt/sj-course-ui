@@ -7,17 +7,18 @@ import ExampleP5Sketch from './ExampleP5Sketch';
 import { ReactP5Wrapper } from 'react-p5-wrapper';
 
 //DEFINE LISTENERS AND PUBLISHERS
-let listenerMotorStatus = null;
+
 let listenerJointState = null;
 let publisherCmdVel = null;
+let publisherInputEvents = null;
 
 export default function SharkHolePage(){
 
   const { isConnected, createListener, createPublisher, removeListener} = useROS();
   const topicPathMotorStatus = "/motorStatus";
-  const topicMotorStatusMsgType = "diagnostic_msgs/msg/KeyValue";
+  const keyValueMsgType = "diagnostic_msgs/msg/KeyValue";
   const topicPathJointState = "/jointState";
-  const topicJointStateMsgType = "sensor_msgs/msg/JointState";
+  const jointStateMsgType = "sensor_msgs/msg/JointState";
 
   const [ jawMsg, setJawMsg ] = useState('{}');
   const [ torsoMsg, setTorsoMsg ] = useState('{}');
@@ -25,19 +26,6 @@ export default function SharkHolePage(){
 
   const [jointStateMsg, setJointStateMsg] = useState('');
   const [torsoVelDeg, setTorsoVelDeg ] = useState('0.0');
-
-
-  const handleMsg = (msg) => {
-    console.log("handleMsg: shark");
-    if (msg.key === 'J')
-    {
-      setJawMsg(String(msg.value));
-
-    }
-    else if (msg.key === 'T'){
-      setTorsoMsg(String(msg.value));
-    }
-  }
 
 
   const handleJointStateMsg = (msg) => {
@@ -49,82 +37,93 @@ export default function SharkHolePage(){
       setJointStateMsg(msg);
       const torsoPosDeg = msg.position[0];
       const torsoPosRad = torsoPosDeg*Math.PI/180.0; //convert to radians
-      console.log("torsoVel: " + String(msg.velocity[0]));
+      //console.log("torsoVel: " + String(msg.velocity[0]));
       setTorsoVelDeg(msg.velocity[0]);
     }
   }
 
-  var twist = new ROSLIB.Message({
-    linear: {
-      x: 0.0,
-      y: 0.0,
-      z: 0.0
-    },
-    angular: {
-      x: 0.0,
-      y: 0.0,
-      z: 0.0
+  var keyValue = new ROSLIB.Message({
+    key: '',
+    value: ''
+  })
+
+
+  function easyButtonClick(event){
+    const sourceId = event.target.id;
+    if (sourceId == "easyBtn"){
+      keyValue.key = 'easy_btn';
+      keyValue.value = 'True';
     }
+    if (sourceId == "mediumBtn"){
+      keyValue.key = 'medium_btn';
+      keyValue.value = 'True';
+    }
+    if (sourceId == "turboBtn"){
+      keyValue.key = 'turbo_btn';
+      keyValue.value = 'True';
+    }
+    
+    
+    if (publisherInputEvents !== null && isConnected)
+    {
+      publisherInputEvents.publish(keyValue);
+    }
+  }
+
+
+  var jointState = new ROSLIB.Message({
+    name: ['torso_joint'],
+    position: [0.0],
+    velocity: [0.0]
   });
 
   function jogTorsoMotorPos(event){
-    twist.angular.z = 1.0;
+    jointState.velocity[0] = 1.0;
     if (publisherCmdVel !== null && isConnected)
     {
-      publisherCmdVel.publish(twist);
+      publisherCmdVel.publish(jointState);
     }
   }
 
   function jogTorsoMotorNeg(event){
-    twist.angular.z = -1.0;
-    
+    jointState.velocity[0] = -1.0;
     if (publisherCmdVel !== null && isConnected)
     {
-      publisherCmdVel.publish(twist);
+      publisherCmdVel.publish(jointState);
     }
   }
 
+
   function stopMotor(event){
-    twist.angular.z = 0.0;
-    
+    jointState.velocity[0] = 0.0;
     if (publisherCmdVel !== null && isConnected)
     {
-      publisherCmdVel.publish(twist);
+      publisherCmdVel.publish(jointState);
     }
   }
 
   useEffect(() => {
 
     return() => {
-      removeListener(listenerMotorStatus);
-      listenerMotorStatus = null;
+      removeListener(listenerJointState);
+      listenerJointState = null;
       console.log("cleanup: shark");
     };
 
   },[]); //leave the array in despite the warning, it is needed for some reason
 
 
-  if (isConnected & listenerMotorStatus === null)
-  {
-    listenerMotorStatus = createListener( 
-      topicPathMotorStatus,
-      topicMotorStatusMsgType,
-      Number(0),
-      'none');
-      listenerMotorStatus.subscribe(handleMsg);
-    //publisherCmdVel = createPublisher("/cmd_vel","geometry_msgs/msg/Twist");
-    //console.log("subscribe: shark")
-  }
-
   if (isConnected & listenerJointState=== null)
   {
     listenerJointState = createListener( 
       topicPathJointState,
-      topicJointStateMsgType,
+      jointStateMsgType,
       Number(0),
       'none');
       listenerJointState.subscribe(handleJointStateMsg);
-    publisherCmdVel = createPublisher("/cmd_vel","geometry_msgs/msg/Twist");
+    //publisherCmdVel = createPublisher("/cmd_vel_scaled_twist","geometry_msgs/msg/Twist");
+    publisherCmdVel = createPublisher("/cmd_vel_scaled_jointState",jointStateMsgType);
+    publisherInputEvents = createPublisher("/input_events",keyValueMsgType);
     console.log("subscribe: shark")
   }
 
@@ -136,15 +135,17 @@ export default function SharkHolePage(){
       </div>
       <p>Torso Vel: {torsoVelDeg}</p>
       <div className="section">
-        <button className="btn btn-blue w-32 m-4 select-none" 
-                onTouchStart={jogTorsoMotorPos} onTouchEnd={stopMotor} onTouchCancel={stopMotor} 
-                onMouseDown={jogTorsoMotorPos} onMouseUp={stopMotor} onMouseLeave={()=>{}}>
-          JOG+
+        <button id="easyBtn" className="btn btn-blue w-32 m-4 select-none" 
+                onClick={easyButtonClick}>
+          EASY
         </button>
-        <button className="btn btn-blue w-32 m-4 select-none" 
-                onTouchStart={jogTorsoMotorNeg} onTouchEnd={stopMotor} onTouchCancel={stopMotor} 
-                onMouseDown={jogTorsoMotorNeg} onMouseUp={stopMotor} onMouseLeave={()=>{}} >
-          JOG-
+        <button id="mediumBtn" className="btn btn-blue w-32 m-4 select-none" 
+                onClick={easyButtonClick}>
+          MEDIUM
+        </button>
+        <button id="turboBtn" className="btn btn-blue w-32 m-4 select-none" 
+                onClick={easyButtonClick}>
+          TURBO
         </button>
       </div>
 

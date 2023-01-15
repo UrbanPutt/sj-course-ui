@@ -43,7 +43,7 @@ export default function ExampleP5Sketch(p5){
       p5.ellipse(10,10,10,10);
       p5.pop();
       p5.translate(p5.width / 2, 50);
-      p5.rotate(torsoPos)
+      p5.rotate(-torsoPos)
       p5.rect(-25,0,50,100);
       p5.rect(-50,30,100,20);
 

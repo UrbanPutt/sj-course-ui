@@ -41,7 +41,7 @@ export default function MotorStatus(props) {
 
   if (isConnected && publisherCmdVel === null)
   {
-    publisherCmdVel = createPublisher("/cmd_vel","geometry_msgs/msg/Twist");
+    publisherCmdVel = createPublisher("/cmd_vel_scaled_twist","geometry_msgs/msg/Twist");
   }
 
   function jogMotorPos(event){
