@@ -24,7 +24,7 @@ export default function ExampleP5Sketch(p5){
           const torsoPosDeg = jointState.position[0];
           //console.log("torsoPos: " + String(torsoPos));
           torsoPos = torsoPosDeg*Math.PI/180.0; //convert to radians
-          console.log("torsoVel: " + String(jointState.velocity[0]));
+          //console.log("torsoVel: " + String(jointState.velocity[0]));
         }
       }
       else{
