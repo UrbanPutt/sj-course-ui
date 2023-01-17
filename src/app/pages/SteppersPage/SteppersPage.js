@@ -21,7 +21,7 @@ export default function SteppersPage(){
   const [imgUrl, setImageUrl] = useState("");
 
   const handleMsg = (msg) => {
-    console.log("handleMsg: steppers");
+    //console.log("handleMsg: steppers");
     if (msg.key === 'J')
     {
       //console.log(String(msg.value))
@@ -34,7 +34,7 @@ export default function SteppersPage(){
   }
 
   const handleWebcamMsg = (msg) => {
-    console.log("handleMsg: webcam");
+    //console.log("handleMsg: webcam");
     setImageUrl("data:image/jpeg;base64," + msg.data)
   }
 
@@ -48,7 +48,7 @@ export default function SteppersPage(){
     console.log("subscribe: steppers")
   }
 
-  if (isConnected & listenerWebcam === null)
+  if (isConnected & listenerWebcam === null & false)
   {
     listenerWebcam = createListener( 
       "/image_raw/compressed",
@@ -62,7 +62,7 @@ export default function SteppersPage(){
 
     return() => {
       removeListener(listenerMotorStatus);
-      removeListener(listenerWebcam);
+      //removeListener(listenerWebcam);
       listenerMotorStatus = null;
       listenerWebcam = null;
       console.log("cleanup: steppers");
