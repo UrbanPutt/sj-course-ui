@@ -22,13 +22,13 @@ export default function SteppersPage(){
 
   const handleMsg = (msg) => {
     //console.log("handleMsg: steppers");
-    if (msg.key === 'J')
+    if (msg.key === '1')
     {
       //console.log(String(msg.value))
       setJawMsg(String(msg.value));
 
     }
-    else if (msg.key === 'T'){
+    else if (msg.key === '0'){
       setTorsoMsg(String(msg.value));
     }
   }
