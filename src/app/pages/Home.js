@@ -12,7 +12,8 @@ export default function Home(){
     const [ serialConnectionStatus, setSerialConnectionStatus ] = useState(false);
     const homeUrl = "ws://98.53.134.144:9090"; //home
     const shopUrl = "ws://174.29.180.255:9090"; //urban putt shop in denver
-    const [url, setUrl] = useState(homeUrl);
+    const localUrl = "ws://192.168.0.245:9090"; //local network
+    const [url, setUrl] = useState(localUrl);
     const handleMsg = (msg) => {
         console.log("handleMsg: home");
         if (msg.key === 'serial')
@@ -51,7 +52,8 @@ export default function Home(){
     }
 
     
-    const websockets = [homeUrl, shopUrl];
+    const websockets = [localUrl, homeUrl, shopUrl];
+    const socketNames = ["local","jake","shop"];
 
     let optionItems = websockets.map((item) =>
     <option key={item}>{item}</option>
