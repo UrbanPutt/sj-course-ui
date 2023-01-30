@@ -11,6 +11,7 @@ import { ReactP5Wrapper } from 'react-p5-wrapper';
 let listenerJointState = null;
 let publisherCmdVel = null;
 let publisherInputEvents = null;
+let listenerStateMachine = null;
 
 export default function SharkHolePage(){
 
@@ -19,6 +20,7 @@ export default function SharkHolePage(){
   const keyValueMsgType = "diagnostic_msgs/msg/KeyValue";
   const topicPathJointState = "/jointState";
   const jointStateMsgType = "sensor_msgs/msg/JointState";
+  const topicPathStateMachine = "/stateMachine";
 
   const [ jawMsg, setJawMsg ] = useState('{}');
   const [ torsoMsg, setTorsoMsg ] = useState('{}');
@@ -27,6 +29,22 @@ export default function SharkHolePage(){
   const [jointStateMsg, setJointStateMsg] = useState('');
   const [torsoVelDeg, setTorsoVelDeg ] = useState('0.0');
 
+  const [stateMachineMsg, setStateMachineMsg] = useState(0);
+  const [stepMsg, setStepMsg] = useState(0);
+
+
+  const handleStateMachineMsg = (msg) => {
+    if(msg.key === 'State')
+    {
+      setStateMachineMsg(String(msg.value))
+    }
+
+    if(msg.key === 'Step')
+    {
+      setStepMsg(String(msg.value))
+    }
+    
+  }
 
   const handleJointStateMsg = (msg) => {
     //console.log("jointState msg: ");
@@ -106,7 +124,9 @@ export default function SharkHolePage(){
 
     return() => {
       removeListener(listenerJointState);
+      removeListener(listenerStateMachine);
       listenerJointState = null;
+      listenerStateMachine = null;
       console.log("cleanup: shark");
     };
 
@@ -127,13 +147,25 @@ export default function SharkHolePage(){
     console.log("subscribe: shark")
   }
 
+  if(isConnected & listenerStateMachine === null)
+  {
+    listenerStateMachine = createListener( 
+      topicPathStateMachine,
+      keyValueMsgType,
+      Number(0),
+      'none');
+      listenerStateMachine.subscribe(handleStateMachineMsg);
+
+  }
+
   return(
     <div className="h-screen w-screen">
       <Header />
       <div className="section w-screen justify-center">
           <ReactP5Wrapper sketch={ExampleP5Sketch} torsoMsg={torsoMsg} jawMsg={jawMsg} jointStateMsg={jointStateMsg} />
       </div>
-      <p>Torso Vel: {torsoVelDeg}</p>
+      <p>Shark State: {stateMachineMsg}</p>
+      <p>Step Number: {stepMsg}</p>
       <div className="section">
         <button id="easyBtn" className="btn btn-blue w-32 m-4 select-none" 
                 onClick={easyButtonClick}>
