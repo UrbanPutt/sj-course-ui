@@ -11,6 +11,7 @@ let listenerWebcam = null;
 export default function SteppersPage(){
 
   const { isConnected, createListener, removeListener} = useROS();
+  const namespace = "/ns_finale_hole"
   const topicPathMotorStatus = "/motorStatus";
   const topicMotorStatusMsgType = "diagnostic_msgs/msg/KeyValue";
   const imageRawCompressedMsgType = "sensor_msgs/msg/CompressedImage"

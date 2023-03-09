@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react'
 let listenerConnectionStatus = null;
 export default function Home(){
     const { isConnected, createListener, removeListener, changeUrl} = useROS();
+    const namespace = "/ns_finale_hole"
     const topicPath = "/connectionStatus";
     const topicMsgType = "diagnostic_msgs/msg/KeyValue";
 
