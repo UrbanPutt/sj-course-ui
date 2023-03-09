@@ -12,25 +12,31 @@ export default function SteppersPage(){
 
   const { isConnected, createListener, removeListener} = useROS();
   const namespace = "/ns_finale_hole"
-  const topicPathMotorStatus = "/motorStatus";
+  const topicPathMotorStatus = namespace + "/motorStatus";
   const topicMotorStatusMsgType = "diagnostic_msgs/msg/KeyValue";
   const imageRawCompressedMsgType = "sensor_msgs/msg/CompressedImage"
 
-  const [ jawMsg, setJawMsg ] = useState('{}');
-  const [ torsoMsg, setTorsoMsg ] = useState('{}');
+  const [ motor0Msg, setmotor0Msg ] = useState('{}');
+  const [ motor1Msg, setmotor1Msg ] = useState('{}');
+  const [ motor2Msg, setmotor2Msg ] = useState('{}');
+  const [ motor3Msg, setmotor3Msg ] = useState('{}');
 
   const [imgUrl, setImageUrl] = useState("");
 
   const handleMsg = (msg) => {
     //console.log("handleMsg: steppers");
-    if (msg.key === '1')
+    if (msg.key === '0')
     {
-      //console.log(String(msg.value))
-      setJawMsg(String(msg.value));
-
+      setmotor0Msg(String(msg.value));
     }
-    else if (msg.key === '0'){
-      setTorsoMsg(String(msg.value));
+    else if (msg.key === '1'){
+      setmotor1Msg(String(msg.value));
+    }
+    else if (msg.key === '2'){
+      setmotor2Msg(String(msg.value));
+    }
+    else if (msg.key === '3'){
+      setmotor3Msg(String(msg.value));
     }
   }
 
@@ -81,8 +87,9 @@ export default function SteppersPage(){
       <div className="section w-screen justify-center">
     
         <div className="flex flex-row justify-evenly sm:justify-start ">
-          <MotorStatus statusJson={torsoMsg} name="TORSO" />
-          <MotorStatus statusJson={jawMsg} name = "JAW" />
+          <MotorStatus statusJson={motor0Msg} name="MOTOR0" namespace={namespace} motorId="0"/>
+          <MotorStatus statusJson={motor1Msg} name="MOTOR1" namespace={namespace} motorId="1"/>
+          <MotorStatus statusJson={motor2Msg} name="MOTOR2" namespace={namespace} motorId="2"/>
         </div>
         <img className="h-50 w-50" src={imgUrl}></img>
       </div>

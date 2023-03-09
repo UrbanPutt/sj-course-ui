@@ -8,10 +8,11 @@ export default function MotorStatus(props) {
   //const [eventLogPrev, setEventLogPrev]=useState(" ");
   //const [eventLog, setEventLog]=useState(" ");
 
+  const motorId = props.motorId;
   var status = props.statusJson ? JSON.parse(props.statusJson): JSON.parse("{}");
   const switches = status.switches ? status.switches : "";
   const statusBits = status.statusBits ? status.statusBits : "";
-
+  const namespace = props.namespace
   const { isConnected, createPublisher} = useROS();
   //const [publisherCmdVel,setPublisherCmdVel]=useState(null);
 
@@ -28,6 +29,11 @@ export default function MotorStatus(props) {
     }
   });
 
+  var jointStateCmd = new ROSLIB.Message({
+    name: [],
+    velocity: []
+  });
+
 
   useEffect(() => {
 
@@ -41,48 +47,45 @@ export default function MotorStatus(props) {
 
   if (isConnected && publisherCmdVel === null)
   {
-    publisherCmdVel = createPublisher("/cmd_vel_scaled_twist","geometry_msgs/msg/Twist");
+    publisherCmdVel = createPublisher(namespace + "/cmd_vel_scaled_jointState",namespace + "sensor_msgs/msg/JointState");
   }
 
   function jogMotorPos(event){
-
+    /*
     if(props.name==="JAW"){
       twist.angular.y = 0.5;
     }
     else if(props.name==="TORSO"){
       twist.angular.z = 0.5;
-    }
+    }*/
+
+    jointStateCmd.name = [String(motorId) + "_joint"];
+    jointStateCmd.velocity = [0.5];
+
     if (publisherCmdVel !== null && isConnected)
     {
-      publisherCmdVel.publish(twist);
+      publisherCmdVel.publish(jointStateCmd);
     }
   }
 
   function jogMotorNeg(event){
 
-    if(props.name==="JAW"){
-      twist.angular.y = -0.5;
-    }
-    else if(props.name==="TORSO"){
-      twist.angular.z = -0.5;
-    }
+    jointStateCmd.name = [String(motorId) + "_joint"];
+    jointStateCmd.velocity = [-0.5];
+
     if (publisherCmdVel !== null && isConnected)
     {
-      publisherCmdVel.publish(twist);
+      publisherCmdVel.publish(jointStateCmd);
     }
   }
 
   function stopMotor(event){
+    jointStateCmd.name = [String(motorId) + "_joint"];
+    jointStateCmd.velocity = [0.0];
 
-    if(props.name==="JAW"){
-      twist.angular.y = 0.0;
-    }
-    else if(props.name==="TORSO"){
-      twist.angular.z = 0.0;
-    }
     if (publisherCmdVel !== null && isConnected)
     {
-      publisherCmdVel.publish(twist);
+      publisherCmdVel.publish(jointStateCmd);
     }
   }
 

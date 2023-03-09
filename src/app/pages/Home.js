@@ -7,7 +7,7 @@ let listenerConnectionStatus = null;
 export default function Home(){
     const { isConnected, createListener, removeListener, changeUrl} = useROS();
     const namespace = "/ns_finale_hole"
-    const topicPath = "/connectionStatus";
+    const topicPath = namespace + "/connectionStatus";
     const topicMsgType = "diagnostic_msgs/msg/KeyValue";
 
     const [ serialConnectionStatus, setSerialConnectionStatus ] = useState(false);
@@ -15,7 +15,7 @@ export default function Home(){
     const shopUrl = "ws://71.205.218.154:9090"; //urban putt shop in denver
     const localUrl = "ws://192.168.0.209:9090"; //local network
     const localUrl245 = "ws://192.168.0.245:9090"; //local network
-    const [url, setUrl] = useState(localUrl);
+    const [url, setUrl] = useState(shopUrl);
     const handleMsg = (msg) => {
         console.log("handleMsg: home");
         if (msg.key === 'serial')
@@ -54,8 +54,8 @@ export default function Home(){
     }
 
     
-    const websockets = [localUrl, localUrl245, homeUrl, shopUrl];
-    const socketNames = ["local","jake","shop"];
+    const websockets = [shopUrl,localUrl, localUrl245, homeUrl];
+    //const socketNames = ["shop","local","jake"];
 
     let optionItems = websockets.map((item) =>
     <option key={item}>{item}</option>
