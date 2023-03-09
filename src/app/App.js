@@ -10,7 +10,7 @@ function App() {
     <ROS>
         <Routes>
             <Route path="/sj-course-ui" element={<Navigate to="/" />}/>
-            <Route path="/stepperspage" name="Stepper Status Page" element={<SteppersPage />} />
+            <Route path="/stepperspage" name="Stepper Status Page" element={<SteppersPage namespace="/ns_finale_hole" />} />
             <Route path="/sharkholepage" name="Shark Hole Page" element={<SharkHolePage />} />
             <Route path="/" name="Home" element={<Home />} />
         </Routes>

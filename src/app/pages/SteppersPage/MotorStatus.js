@@ -3,6 +3,7 @@ import ROSLIB from 'roslib'
 import { useROS} from '../../components/ROS/ROS';
 
 let publisherCmdVel = null;
+let publisherCmds = null;
 
 export default function MotorStatus(props) {
   //const [eventLogPrev, setEventLogPrev]=useState(" ");
@@ -16,22 +17,15 @@ export default function MotorStatus(props) {
   const { isConnected, createPublisher} = useROS();
   //const [publisherCmdVel,setPublisherCmdVel]=useState(null);
 
-  var twist = new ROSLIB.Message({
-    linear: {
-      x: 0.0,
-      y: 0.0,
-      z: 0.0
-    },
-    angular: {
-      x: 0.0,
-      y: 0.0,
-      z: 0.0
-    }
-  });
 
   var jointStateCmd = new ROSLIB.Message({
     name: [],
     velocity: []
+  });
+
+  var keyValue = new ROSLIB.Message({
+    key: "",
+    value: ""
   });
 
 
@@ -47,7 +41,8 @@ export default function MotorStatus(props) {
 
   if (isConnected && publisherCmdVel === null)
   {
-    publisherCmdVel = createPublisher(namespace + "/cmd_vel_scaled_jointState",namespace + "sensor_msgs/msg/JointState");
+    publisherCmdVel = createPublisher(namespace + "/cmd_vel_scaled_jointState","sensor_msgs/msg/JointState");
+    publisherCmds = createPublisher(namespace + "/cmds","diagnostic_msgs/msg/KeyValue")
   }
 
   function jogMotorPos(event){
@@ -89,6 +84,22 @@ export default function MotorStatus(props) {
     }
   }
 
+  function publishMotorCmd(codeChr){
+    keyValue.key = codeChr
+    keyValue.value = String(motorId);
+    if (publisherCmds !== null && isConnected)
+    {
+      publisherCmds.publish(keyValue);
+    }
+  }
+
+  function homeMotor(event){
+    publishMotorCmd("H");
+  }
+
+  function stopMotor(event){
+    publishMotorCmd("S");
+  }
   
   return (
 
@@ -117,6 +128,16 @@ export default function MotorStatus(props) {
               onTouchStart={jogMotorNeg} onTouchEnd={stopMotor} onTouchCancel={stopMotor} 
               onMouseDown={jogMotorNeg} onMouseUp={stopMotor} onMouseLeave={()=>{}} >
         JOG-
+      </button>
+      <button className="btn btn-blue w-32 mt-4 mb-2 select-none" 
+              onTouchStart={homeMotor} onTouchEnd={()=>{}} onTouchCancel={()=>{}} 
+              onMouseDown={homeMotor} onMouseUp={()=>{}} onMouseLeave={()=>{}} >
+        HOME
+      </button>
+      <button className="btn btn-red w-32 mt-4 mb-2 select-none" 
+              onTouchStart={stopMotor} onTouchEnd={()=>{}} onTouchCancel={()=>{}} 
+              onMouseDown={stopMotor} onMouseUp={()=>{}} onMouseLeave={()=>{}} >
+        STOP
       </button>
     </div>
     

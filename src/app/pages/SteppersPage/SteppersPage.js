@@ -8,10 +8,10 @@ import React, { useEffect, useState } from 'react'
 let listenerMotorStatus = null;
 let listenerWebcam = null;
 
-export default function SteppersPage(){
+export default function SteppersPage(props){
 
   const { isConnected, createListener, removeListener} = useROS();
-  const namespace = "/ns_finale_hole"
+  const namespace = props.namespace;
   const topicPathMotorStatus = namespace + "/motorStatus";
   const topicMotorStatusMsgType = "diagnostic_msgs/msg/KeyValue";
   const imageRawCompressedMsgType = "sensor_msgs/msg/CompressedImage"
