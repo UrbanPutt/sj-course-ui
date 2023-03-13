@@ -84,9 +84,9 @@ export default function MotorStatus(props) {
     }
   }
 
-  function publishMotorCmd(codeChr){
+  function publishMotorCmd(codeChr,value=""){
     keyValue.key = codeChr + String(motorId);
-    keyValue.value = "";
+    keyValue.value = value;
     if (publisherCmds !== null && isConnected)
     {
       publisherCmds.publish(keyValue);
@@ -109,7 +109,7 @@ export default function MotorStatus(props) {
   }
 
   function zeroMotor(event){
-    publishMotorCmd("Z");
+    publishMotorCmd("Z","0");
     console.log(String(motorId))
   }
   
