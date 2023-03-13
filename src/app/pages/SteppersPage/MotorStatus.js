@@ -74,7 +74,7 @@ export default function MotorStatus(props) {
     }
   }
 
-  function stopMotor(event){
+  function zeroSpeedMotor(event){
     jointStateCmd.name = [String(motorId) + "_joint"];
     jointStateCmd.velocity = [0.0];
 
@@ -85,8 +85,8 @@ export default function MotorStatus(props) {
   }
 
   function publishMotorCmd(codeChr){
-    keyValue.key = codeChr
-    keyValue.value = String(motorId);
+    keyValue.key = codeChr + String(motorId);
+    keyValue.value = "";
     if (publisherCmds !== null && isConnected)
     {
       publisherCmds.publish(keyValue);
@@ -97,8 +97,10 @@ export default function MotorStatus(props) {
     publishMotorCmd("H");
   }
 
+  
   function stopMotor(event){
     publishMotorCmd("S");
+    console.log(String(motorId))
   }
   
   return (
@@ -120,13 +122,13 @@ export default function MotorStatus(props) {
       <b></b>Homed: {boolToStatusBit(statusBits.Homed)} <br />
 
       <button className="btn btn-blue w-32 mt-4 select-none" 
-              onTouchStart={jogMotorPos} onTouchEnd={stopMotor} onTouchCancel={stopMotor} 
-              onMouseDown={jogMotorPos} onMouseUp={stopMotor} onMouseLeave={()=>{}}>
+              onTouchStart={jogMotorPos} onTouchEnd={zeroSpeedMotor} onTouchCancel={zeroSpeedMotor} 
+              onMouseDown={jogMotorPos} onMouseUp={zeroSpeedMotor} onMouseLeave={()=>{}}>
         JOG+
       </button>
       <button className="btn btn-blue w-32 mt-4 mb-2 select-none" 
-              onTouchStart={jogMotorNeg} onTouchEnd={stopMotor} onTouchCancel={stopMotor} 
-              onMouseDown={jogMotorNeg} onMouseUp={stopMotor} onMouseLeave={()=>{}} >
+              onTouchStart={jogMotorNeg} onTouchEnd={zeroSpeedMotor} onTouchCancel={zeroSpeedMotor} 
+              onMouseDown={jogMotorNeg} onMouseUp={zeroSpeedMotor} onMouseLeave={()=>{}} >
         JOG-
       </button>
       <button className="btn btn-blue w-32 mt-4 mb-2 select-none" 
