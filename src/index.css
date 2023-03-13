@@ -36,5 +36,11 @@
       .btn-red:hover {
         @apply bg-red-700;
       }
+      .btn-black{
+        @apply bg-black text-white;
+      }
+      .btn-white{
+        @apply bg-white text-black;
+      }
 
 }

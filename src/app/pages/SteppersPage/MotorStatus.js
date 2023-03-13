@@ -102,6 +102,16 @@ export default function MotorStatus(props) {
     publishMotorCmd("S");
     console.log(String(motorId))
   }
+
+  function clearMotor(event){
+    publishMotorCmd("C");
+    console.log(String(motorId))
+  }
+
+  function zeroMotor(event){
+    publishMotorCmd("Z");
+    console.log(String(motorId))
+  }
   
   return (
 
@@ -111,8 +121,9 @@ export default function MotorStatus(props) {
       <b>Mode </b> {intToModeString(status.mode)}<br />
       <b>Act/Ref Position </b>{status.actualPosition} / {status.referencePosition} <br />
       <b>Act/Ref Velocity </b>{parseFloat(status.actualVelocity).toFixed(1)} / {parseFloat(status.referenceVelocity).toFixed(1)}<br />
-      <b>Switches </b>PosLimSw: {boolToOnOffString(switches.PositiveLimSw)} <br />
-      <b></b>NegLimSw: {boolToOnOffString(switches.NegativeLimSw)} <br />
+      <b>Switches </b>
+      <p className={`${switches.PositiveLimSw?'text-green-500' : 'text-red-500' }`}> PosLimSw: {boolToOnOffString(switches.PositiveLimSw)}</p> 
+      <p className={`${switches.NegativeLimSw?'text-green-500' : 'text-red-500' }`}> NegLimSw: {boolToOnOffString(switches.NegativeLimSw)}</p> 
       <b></b>HomeSw: {boolToOnOffString(switches.HomeSw)} <br />
       <b>Status Bits </b>AtPos: {boolToStatusBit(statusBits.AtPosition)} <br />
       <b></b>Moving: {boolToStatusBit(statusBits.Moving)} <br />
@@ -140,6 +151,16 @@ export default function MotorStatus(props) {
               onTouchStart={stopMotor} onTouchEnd={()=>{}} onTouchCancel={()=>{}} 
               onMouseDown={stopMotor} onMouseUp={()=>{}} onMouseLeave={()=>{}} >
         STOP
+      </button>
+      <button className="btn btn-black w-32 mt-4 mb-2 select-none" 
+              onTouchStart={clearMotor} onTouchEnd={()=>{}} onTouchCancel={()=>{}} 
+              onMouseDown={clearMotor} onMouseUp={()=>{}} onMouseLeave={()=>{}} >
+        CLEAR
+      </button>
+      <button className="btn btn-white w-32 mt-4 mb-2 select-none" 
+              onTouchStart={zeroMotor} onTouchEnd={()=>{}} onTouchCancel={()=>{}} 
+              onMouseDown={zeroMotor} onMouseUp={()=>{}} onMouseLeave={()=>{}} >
+        ZERO
       </button>
     </div>
     
