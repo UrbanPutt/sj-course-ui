@@ -156,9 +156,9 @@ export default function SharkHolePage(props){
       <p>Hole State: {stateMachineMsg}</p>
       <p>Step Number: {stepMsg}</p>
       <div className="section">
-        <button id="resetBtn" className="btn btn-blue w-32 m-4 select-none" 
+        <button id="resetBtn" className="btn btn-green w-32 m-4 select-none" 
                 onClick={btnClick}>
-          RESET
+          START
         </button>
         <button id="stopBtn" className="btn btn-red w-32 m-4 select-none" 
                 onClick={btnClick}>

@@ -42,5 +42,8 @@
       .btn-white{
         @apply bg-white text-black;
       }
+      .btn-green{
+        @apply bg-green-500 text-white;
+      }
 
 }
