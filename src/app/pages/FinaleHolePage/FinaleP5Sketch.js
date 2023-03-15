@@ -6,7 +6,7 @@ export default function FinaleP5Sketch(p5){
 
   
     p5.setup = () => {
-      p5.createCanvas(350, 500);
+      p5.createCanvas(350, 350);
       p5.noStroke();
       p5.fill(255);
       

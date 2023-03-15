@@ -13,6 +13,7 @@ let publisherCmdVel = null;
 let publisherInputEvents = null;
 let listenerStateMachine = null;
 
+
 export default function SharkHolePage(props){
 
   const namespace = props.namespace
@@ -72,6 +73,7 @@ export default function SharkHolePage(props){
   function btnClick(event){
     const sourceId = event.target.id;
     if (sourceId == "resetBtn"){
+      console.log("reset Btn");
       keyValue.key = 'reset_btn';
       keyValue.value = 'True';
     }
@@ -129,9 +131,9 @@ export default function SharkHolePage(props){
       'none');
       listenerJointState.subscribe(handleJointStateMsg);
     //publisherCmdVel = createPublisher("/cmd_vel_scaled_twist","geometry_msgs/msg/Twist");
-    publisherCmdVel = createPublisher("/cmd_vel_scaled_jointState",jointStateMsgType);
-    publisherInputEvents = createPublisher("/input_events",keyValueMsgType);
-    console.log("subscribe: shark")
+    publisherCmdVel = createPublisher(namespace + "/cmd_vel_scaled_jointState",jointStateMsgType);
+    publisherInputEvents = createPublisher(namespace + "/input_events",keyValueMsgType);
+    console.log("subscribe: finale")
   }
 
   if(isConnected & listenerStateMachine === null)
