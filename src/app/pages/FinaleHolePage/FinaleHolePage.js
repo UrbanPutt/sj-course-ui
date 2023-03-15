@@ -160,6 +160,10 @@ export default function SharkHolePage(props){
                 onClick={btnClick}>
           RESET
         </button>
+        <button id="stopBtn" className="btn btn-red w-32 m-4 select-none" 
+                onClick={btnClick}>
+          STOP
+        </button>
 
       </div>
 
