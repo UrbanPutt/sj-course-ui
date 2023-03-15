@@ -21,7 +21,7 @@ export default function SteppersPage(props){
   const [ motor2Msg, setmotor2Msg ] = useState('{}');
   const [ motor3Msg, setmotor3Msg ] = useState('{}');
 
-  const [imgUrl, setImageUrl] = useState("");
+  //const [imgUrl, setImageUrl] = useState("");
 
   const handleMsg = (msg) => {
     //console.log("handleMsg: steppers");
@@ -42,7 +42,7 @@ export default function SteppersPage(props){
 
   const handleWebcamMsg = (msg) => {
     //console.log("handleMsg: webcam");
-    setImageUrl("data:image/jpeg;base64," + msg.data)
+    //setImageUrl("data:image/jpeg;base64," + msg.data)
   }
 
   if (isConnected & listenerMotorStatus === null)
@@ -89,10 +89,11 @@ export default function SteppersPage(props){
         <div className="flex flex-row justify-evenly sm:justify-start ">
           <MotorStatus statusJson={motor0Msg} name="MOTOR0" namespace={namespace} motorId="0" />
           <MotorStatus statusJson={motor1Msg} name="MOTOR1" namespace={namespace} motorId="1" />
+          
+        </div>
+        <div>
           <MotorStatus statusJson={motor2Msg} name="MOTOR2" namespace={namespace} motorId="2"/>
         </div>
-
-        <img className="h-50 w-50" src={imgUrl}></img>
       </div>
       <div className="fixed bottom-1 right-0 z-50">
           <FullscreenBtn />

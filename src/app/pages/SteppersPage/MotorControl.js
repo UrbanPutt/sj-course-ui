@@ -5,7 +5,7 @@ import { useROS} from '../../components/ROS/ROS';
 let publisherCmdVel = null;
 let publisherCmds = null;
 
-export default function MotorStatus(props) {
+export default function MotorControl(props) {
   //const [eventLogPrev, setEventLogPrev]=useState(" ");
   //const [eventLog, setEventLog]=useState(" ");
 
