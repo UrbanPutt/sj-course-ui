@@ -112,7 +112,134 @@ export default function MotorStatus(props) {
     publishMotorCmd("Z","0");
     console.log(String(motorId))
   }
+
+  function enableMotor(event){
+    publishMotorCmd("E","0");
+    console.log(String(motorId))
+  }
+
+  function killMotor(event){
+    publishMotorCmd("K","0");
+    console.log(String(motorId))
+  }
   
+
+/*
+  const buttonlist = [{"name":"test1"},{"name":"test2"}];
+  const listItems = data.map((d) =>   <button key={d.onClick}>{d.name}</li>  );
+
+  return (
+    <div>
+    {listItems }
+    </div>
+  );
+  */
+  
+
+  function showZeroBtn(){
+    return(
+    <button className="btn btn-white w-32 mt-4 mb-2 select-none" 
+    onTouchStart={zeroMotor} onTouchEnd={()=>{}} onTouchCancel={()=>{}} 
+    onMouseDown={zeroMotor} onMouseUp={()=>{}} onMouseLeave={()=>{}}>
+    ZERO
+  </button>
+    );
+  }
+
+
+  let index = 0
+  const zeroBtnJsx = <button key={index} className="btn btn-white w-32 mt-4 mb-2 select-none" 
+    onTouchStart={zeroMotor} onTouchEnd={()=>{}} onTouchCancel={()=>{}} 
+    onMouseDown={zeroMotor} onMouseUp={()=>{}} onMouseLeave={()=>{}}>
+    ZERO
+    </button>;
+
+  index++;
+  const enableBtnJsx = <button key={index} className="btn btn-green w-32 mt-4 mb-2 select-none" 
+    onTouchStart={enableMotor} onTouchEnd={()=>{}} onTouchCancel={()=>{}} 
+    onMouseDown={enableMotor} onMouseUp={()=>{}} onMouseLeave={()=>{}} >
+    ENABLE
+    </button>
+
+  index++;
+  const killBtnJsx = <button key={index} className="btn btn-black w-32 mt-4 mb-2 select-none text-red-500" 
+    onTouchStart={killMotor} onTouchEnd={()=>{}} onTouchCancel={()=>{}} 
+    onMouseDown={killMotor} onMouseUp={()=>{}} onMouseLeave={()=>{}} >
+    KILL
+    </button>;
+
+  index++;
+  const jogPosBtnJsx = <button key={index} className="btn btn-blue w-32 mt-4 select-none" 
+            onTouchStart={jogMotorPos} onTouchEnd={zeroSpeedMotor} onTouchCancel={zeroSpeedMotor} 
+            onMouseDown={jogMotorPos} onMouseUp={zeroSpeedMotor} onMouseLeave={()=>{}}>
+      JOG+
+    </button>;
+
+  index++;
+  const jogNegBtnJsx = <button key={index} className="btn btn-blue w-32 mt-4 mb-2 select-none" 
+            onTouchStart={jogMotorNeg} onTouchEnd={zeroSpeedMotor} onTouchCancel={zeroSpeedMotor} 
+            onMouseDown={jogMotorNeg} onMouseUp={zeroSpeedMotor} onMouseLeave={()=>{}} >
+      JOG-
+    </button>;
+  index++;
+  const homeBtnJsx = <button key={index} className="btn btn-blue w-32 mt-4 mb-2 select-none" 
+            onTouchStart={homeMotor} onTouchEnd={()=>{}} onTouchCancel={()=>{}} 
+            onMouseDown={homeMotor} onMouseUp={()=>{}} onMouseLeave={()=>{}} >
+      HOME
+    </button>;
+
+    index++;
+    const stopBtnJsx = <button key={index} className="btn btn-red w-32 mt-4 mb-2 select-none" 
+            onTouchStart={stopMotor} onTouchEnd={()=>{}} onTouchCancel={()=>{}} 
+            onMouseDown={stopMotor} onMouseUp={()=>{}} onMouseLeave={()=>{}} >
+      STOP
+    </button>;
+
+    index++;
+    const clearBtnJsx = <button key={index} className="btn btn-white w-32 mt-4 mb-2 select-none text-red-500" 
+            onTouchStart={clearMotor} onTouchEnd={()=>{}} onTouchCancel={()=>{}} 
+            onMouseDown={clearMotor} onMouseUp={()=>{}} onMouseLeave={()=>{}} >
+      CLEAR
+    </button>;
+
+  let btnList = [];
+  //console.log("MODE: " + String(status.mode));
+  let modeString = intToModeString(status.mode);
+  if (isConnected){
+    switch (modeString) {
+      case "INACTIVE":
+        btnList.push(enableBtnJsx); 
+        //modeCmdBtn =enableBtnJsx
+        break;
+      case "IDLE":
+        btnList.push(jogPosBtnJsx);
+        btnList.push(jogNegBtnJsx);
+        btnList.push(homeBtnJsx);
+        btnList.push(zeroBtnJsx);
+        btnList.push(killBtnJsx);
+        break;
+
+      case "RUNNING":
+        btnList.push(jogPosBtnJsx);
+        btnList.push(jogNegBtnJsx);
+        btnList.push(stopBtnJsx);
+        break
+      case "HOMING":
+        btnList.push(stopBtnJsx);
+        break;
+      case "ERROR":
+        btnList.push(clearBtnJsx);
+        if(statusBits.Enabled){
+          btnList.push(killBtnJsx);
+        }
+        
+        break;
+      default:
+        break;
+    }
+  }
+
+
   return (
 
     <div className= "flex flex-col bg-gray-100 p-2 mr-4 rounded-md w-5/12 md:w-1/4">
@@ -132,36 +259,17 @@ export default function MotorStatus(props) {
       <b></b>Ready: {boolToStatusBit(statusBits.Ready)} <br />
       <b></b>Homed: {boolToStatusBit(statusBits.Homed)} <br />
 
-      <button className="btn btn-blue w-32 mt-4 select-none" 
-              onTouchStart={jogMotorPos} onTouchEnd={zeroSpeedMotor} onTouchCancel={zeroSpeedMotor} 
-              onMouseDown={jogMotorPos} onMouseUp={zeroSpeedMotor} onMouseLeave={()=>{}}>
-        JOG+
-      </button>
-      <button className="btn btn-blue w-32 mt-4 mb-2 select-none" 
-              onTouchStart={jogMotorNeg} onTouchEnd={zeroSpeedMotor} onTouchCancel={zeroSpeedMotor} 
-              onMouseDown={jogMotorNeg} onMouseUp={zeroSpeedMotor} onMouseLeave={()=>{}} >
-        JOG-
-      </button>
-      <button className="btn btn-blue w-32 mt-4 mb-2 select-none" 
-              onTouchStart={homeMotor} onTouchEnd={()=>{}} onTouchCancel={()=>{}} 
-              onMouseDown={homeMotor} onMouseUp={()=>{}} onMouseLeave={()=>{}} >
-        HOME
-      </button>
-      <button className="btn btn-red w-32 mt-4 mb-2 select-none" 
-              onTouchStart={stopMotor} onTouchEnd={()=>{}} onTouchCancel={()=>{}} 
-              onMouseDown={stopMotor} onMouseUp={()=>{}} onMouseLeave={()=>{}} >
-        STOP
-      </button>
-      <button className="btn btn-black w-32 mt-4 mb-2 select-none" 
-              onTouchStart={clearMotor} onTouchEnd={()=>{}} onTouchCancel={()=>{}} 
-              onMouseDown={clearMotor} onMouseUp={()=>{}} onMouseLeave={()=>{}} >
-        CLEAR
-      </button>
-      <button className="btn btn-white w-32 mt-4 mb-2 select-none" 
-              onTouchStart={zeroMotor} onTouchEnd={()=>{}} onTouchCancel={()=>{}} 
-              onMouseDown={zeroMotor} onMouseUp={()=>{}} onMouseLeave={()=>{}} >
-        ZERO
-      </button>
+      {(() => {
+        if(props.showButtons){
+          return btnList
+        }
+      })()}
+
+
+        
+
+      
+     
     </div>
     
   );
@@ -179,7 +287,7 @@ function intToModeString(x){
 
   switch(x){
     case 0:
-      return "DISABLED";
+      return "INACTIVE";
     case 1:
       return "IDLE";
     case 2:

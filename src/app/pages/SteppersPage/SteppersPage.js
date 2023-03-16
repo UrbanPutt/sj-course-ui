@@ -86,13 +86,14 @@ export default function SteppersPage(props){
       
       <div className="section w-screen justify-center">
     
-        <div className="flex flex-row justify-evenly sm:justify-start ">
-          <MotorStatus statusJson={motor0Msg} name="MOTOR0" namespace={namespace} motorId="0" />
-          <MotorStatus statusJson={motor1Msg} name="MOTOR1" namespace={namespace} motorId="1" />
+        <div className="flex flex-row justify-evenly sm:justify-start mb-4 ">
+          <MotorStatus statusJson={motor0Msg} name="MOTOR0" namespace={namespace} motorId="0" showButtons="true" />
+          <MotorStatus statusJson={motor1Msg} name="MOTOR1" namespace={namespace} motorId="1" showButtons="true" />
           
         </div>
-        <div>
-          <MotorStatus statusJson={motor2Msg} name="MOTOR2" namespace={namespace} motorId="2"/>
+        <div className="flex flex-row justify-evenly sm:justify-start mb-4">
+          <MotorStatus statusJson={motor2Msg} name="MOTOR2" namespace={namespace} motorId="2" showButtons="true"/>
+          <MotorStatus statusJson={motor3Msg} name="MOTOR3" namespace={namespace} motorId="3" showButtons="false"/>
         </div>
       </div>
       <div className="fixed bottom-1 right-0 z-50">

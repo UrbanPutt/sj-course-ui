@@ -5,6 +5,7 @@ import ROSLIB from 'roslib'
 import React, { useEffect, useState } from 'react'
 import ExampleP5Sketch from './ExampleP5Sketch';
 import { ReactP5Wrapper } from 'react-p5-wrapper';
+import { Link } from "react-router-dom"
 
 //DEFINE LISTENERS AND PUBLISHERS
 
@@ -14,6 +15,8 @@ let publisherInputEvents = null;
 let listenerStateMachine = null;
 
 export default function SharkHolePage(){
+  const name = 'STEPPERS';
+  const href = '/sharkholepage/steppers';
 
   const { isConnected, createListener, createPublisher, removeListener} = useROS();
   const topicPathMotorStatus = "/motorStatus";
@@ -180,7 +183,11 @@ export default function SharkHolePage(){
           TURBO
         </button>
       </div>
-
+      <div className="flex flex-row justify-evenly mb-4 ">
+        <button className="btn btn-black w-32 mt-4 mb-2 select-none">
+              <Link to={href}>{name}</Link>
+        </button>
+      </div>
       <div className="fixed bottom-1 right-0 z-50">
           <FullscreenBtn />
       </div>

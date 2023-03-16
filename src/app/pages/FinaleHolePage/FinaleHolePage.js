@@ -5,7 +5,7 @@ import ROSLIB from 'roslib'
 import React, { useEffect, useState } from 'react'
 import FinaleP5Sketch from './FinaleP5Sketch';
 import { ReactP5Wrapper } from 'react-p5-wrapper';
-
+import { Link } from "react-router-dom"
 //DEFINE LISTENERS AND PUBLISHERS
 
 let listenerJointState = null;
@@ -14,7 +14,10 @@ let publisherInputEvents = null;
 let listenerStateMachine = null;
 
 
-export default function SharkHolePage(props){
+export default function FinaleHolePage(props){
+
+  const name = 'STEPPERS';
+  const href = '/finaleholepage/steppers';
 
   const namespace = props.namespace
   const { isConnected, createListener, createPublisher, removeListener} = useROS();
@@ -54,9 +57,9 @@ export default function SharkHolePage(props){
     //console.log("jointState msg: ");
     //console.log(msg);
     
-
+    setJointStateMsg(msg);
     if(msg.name[0] === "bismuth_lift_lower_joint"){
-      setJointStateMsg(msg);
+      
       const motor0PosDeg = msg.position[0];
       const motor0PosRad = motor0PosDeg*Math.PI/180.0; //convert to radians
       //console.log("torsoVel: " + String(msg.velocity[0]));
@@ -146,6 +149,7 @@ export default function SharkHolePage(props){
       listenerStateMachine.subscribe(handleStateMachineMsg);
 
   }
+  
   let button
   if (stepMsg  == 0) {
     button =    <button id="resetBtn" className="btn btn-green w-32 m-4 select-none" onClick={btnClick}>START</button>;
@@ -153,18 +157,29 @@ export default function SharkHolePage(props){
     button =     <button id="stopBtn" className="btn btn-red w-32 m-4 select-none" onClick={btnClick}>STOP</button>;
   }
 
+
   return(
     <div className="h-screen w-screen">
       <Header />
       <div className="section w-screen justify-center">
           <ReactP5Wrapper sketch={FinaleP5Sketch} jointStateMsg={jointStateMsg}/>
       </div>
-      <p>Hole State: {stateMachineMsg}</p>
-      <p>Step Number: {stepMsg}</p>
-      <div className="section">
-      {button}
-    
+      <div className="flex flex-col items-center justify-center">
 
+        <b>Hole State: </b>{stateMachineMsg}<br />
+        <b> </b> <br />
+        <b>Step Number: </b>{stepMsg} <br />
+      </div>
+      
+      <div className="flex flex-row justify-evenly mb-4 ">
+        
+        {button}
+      </div>
+
+      <div className="flex flex-row justify-evenly mb-4 ">
+        <button className="btn btn-black w-32 mt-4 mb-2 select-none">
+              <Link to={href}>{name}</Link>
+        </button>
       </div>
 
       <div className="fixed bottom-1 right-0 z-50">

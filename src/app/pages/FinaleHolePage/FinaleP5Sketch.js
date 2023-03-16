@@ -3,11 +3,11 @@ export default function FinaleP5Sketch(p5){
     let lowerLiftPos = 0;
     let upperLiftPos = 0;
  
-
+    const inch_to_pixel = 20;
 
   
     p5.setup = () => {
-      p5.createCanvas(350, 350);
+      p5.createCanvas(350, 305);
       p5.noStroke();
       p5.fill(255);
       
@@ -20,28 +20,39 @@ export default function FinaleP5Sketch(p5){
       const jointState = p.jointStateMsg !== ""? p.jointStateMsg: null
       
       if (jointState !== null){
+        //console.log(jointState.name[2]);
         if(jointState.name[0] === "bismuth_lift_lower_joint"){
-          const lowerLiftPos = Math.round(jointState.position[0]*10);
+          lowerLiftPos = Math.round(jointState.position[0]*inch_to_pixel);
           //console.log("lowerLiftPos: " + String(lowerLiftPos));
         }
         else if (jointState.name[0] === "bismuth_lift_upper_joint"){
-          const upperLiftPos = jointState.position[0];
-          //console.log("torsoVel: " + String(jointState.velocity[0]));
+          upperLiftPos = Math.round(jointState.position[0]*inch_to_pixel);
+          //console.log("upperLiftPos: " + String(upperLiftPos));
+        }
+        else{
+          //console.log(jointState.name[0]);
         }
       }
       else{
         lowerLiftPos = 0;
+        upperLiftPos = 0;
       }
-      console.log("lowerLiftPos: " + String(lowerLiftPos));
+      
     }
 
-    console.log("lowerLiftPos: " + String(lowerLiftPos));
+    let y_pad = 150;    
 
-    p5.draw = (lowerLiftPos) => {
+    p5.draw = () => {
       p5.background(51);
-      p5.push()
-      p5.ellipse(10,lowerLiftPos,10,10);
-      //console.log("lowerLiftPos: " + String(lowerLiftPos));
+      p5.push();
+      p5.translate(150,y_pad);
+      p5.rect(0,0,5,7*inch_to_pixel);
+      p5.rect(0,lowerLiftPos,25,10);
+      p5.pop();
+      p5.push();
+      p5.translate(200,y_pad-6*inch_to_pixel);
+      p5.rect(0,0,5,7*inch_to_pixel);
+      p5.rect(-25+5,upperLiftPos,25,10);
     };
 
     p5.myCustomRedrawAccordingToNewPropsHandler = (newProps) => {
