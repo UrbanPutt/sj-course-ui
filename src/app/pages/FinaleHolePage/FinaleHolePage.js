@@ -146,24 +146,24 @@ export default function SharkHolePage(props){
       listenerStateMachine.subscribe(handleStateMachineMsg);
 
   }
+  let button
+  if (stepMsg  == 0) {
+    button =    <button id="resetBtn" className="btn btn-green w-32 m-4 select-none" onClick={btnClick}>START</button>;
+  } else if(stepMsg < 800 && stepMsg >0){
+    button =     <button id="stopBtn" className="btn btn-red w-32 m-4 select-none" onClick={btnClick}>STOP</button>;
+  }
 
   return(
     <div className="h-screen w-screen">
       <Header />
       <div className="section w-screen justify-center">
-          <ReactP5Wrapper sketch={FinaleP5Sketch} torsoMsg={motor0Msg} jawMsg={motor1Msg} jointStateMsg={jointStateMsg} />
+          <ReactP5Wrapper sketch={FinaleP5Sketch} jointStateMsg={jointStateMsg}/>
       </div>
       <p>Hole State: {stateMachineMsg}</p>
       <p>Step Number: {stepMsg}</p>
       <div className="section">
-        <button id="resetBtn" className="btn btn-green w-32 m-4 select-none" 
-                onClick={btnClick}>
-          START
-        </button>
-        <button id="stopBtn" className="btn btn-red w-32 m-4 select-none" 
-                onClick={btnClick}>
-          STOP
-        </button>
+      {button}
+    
 
       </div>
 

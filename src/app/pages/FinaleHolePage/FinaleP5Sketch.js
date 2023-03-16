@@ -1,7 +1,8 @@
 export default function FinaleP5Sketch(p5){
     let canvas;
-    let torsoPos = 0;
-    //let jawPos = 0;
+    let lowerLiftPos = 0;
+    let upperLiftPos = 0;
+ 
 
 
   
@@ -16,38 +17,31 @@ export default function FinaleP5Sketch(p5){
     }
 
     p5.updateWithProps = p => {
-      const torsoStatus = p.torsoMsg ? JSON.parse(p.torsoMsg): JSON.parse("{}");
       const jointState = p.jointStateMsg !== ""? p.jointStateMsg: null
       
       if (jointState !== null){
-        if(jointState.name[0] === "torso_joint"){
-          const torsoPosDeg = jointState.position[0];
-          //console.log("torsoPos: " + String(torsoPos));
-          torsoPos = torsoPosDeg*Math.PI/180.0; //convert to radians
+        if(jointState.name[0] === "bismuth_lift_lower_joint"){
+          const lowerLiftPos = Math.round(jointState.position[0]*10);
+          //console.log("lowerLiftPos: " + String(lowerLiftPos));
+        }
+        else if (jointState.name[0] === "bismuth_lift_upper_joint"){
+          const upperLiftPos = jointState.position[0];
           //console.log("torsoVel: " + String(jointState.velocity[0]));
         }
       }
       else{
-        torsoPos = 0.0;
+        lowerLiftPos = 0;
       }
-    
-
-      //console.log(torsoStatus.actualPosition)
-      //torsoPos = torsoStatus.actualPosition? torsoStatus.actualPosition*Math.PI/180.0 : 0; //convert to radians
+      console.log("lowerLiftPos: " + String(lowerLiftPos));
     }
 
-    p5.draw = () => {
-      p5.background(51);
-      p5.push();
-      p5.translate(p5.width / 2, p5.height - 50);
-      p5.ellipse(10,10,10,10);
-      p5.pop();
-      p5.translate(p5.width / 2, 50);
-      p5.rotate(-torsoPos)
-      p5.rect(-25,0,50,100);
-      p5.rect(-50,30,100,20);
+    console.log("lowerLiftPos: " + String(lowerLiftPos));
 
-      
+    p5.draw = (lowerLiftPos) => {
+      p5.background(51);
+      p5.push()
+      p5.ellipse(10,lowerLiftPos,10,10);
+      //console.log("lowerLiftPos: " + String(lowerLiftPos));
     };
 
     p5.myCustomRedrawAccordingToNewPropsHandler = (newProps) => {
