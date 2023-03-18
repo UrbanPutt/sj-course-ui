@@ -1,5 +1,5 @@
 import Header from '../components/Header';
-import FullscreenBtn from '../components/FullScreenBtn';
+import NavBar from '../components/NavBar';
 import {useROS} from '../components/ROS/ROS';
 import React, { useEffect, useState } from 'react'
 
@@ -100,8 +100,8 @@ export default function Home(){
             </div>
 
 
-            <div className="fixed bottom-1 right-0 z-50">
-                <FullscreenBtn />
+            <div className="fixed bottom-0 right-0 z-50 w-full">
+                <NavBar />
             </div>
         </div>     
     )

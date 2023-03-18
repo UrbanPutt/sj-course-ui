@@ -71,15 +71,15 @@ export default function SharkHolePage(){
 
   function easyButtonClick(event){
     const sourceId = event.target.id;
-    if (sourceId == "easyBtn"){
+    if (sourceId === "easyBtn"){
       keyValue.key = 'easy_btn';
       keyValue.value = 'True';
     }
-    if (sourceId == "mediumBtn"){
+    if (sourceId === "mediumBtn"){
       keyValue.key = 'medium_btn';
       keyValue.value = 'True';
     }
-    if (sourceId == "turboBtn"){
+    if (sourceId === "turboBtn"){
       keyValue.key = 'turbo_btn';
       keyValue.value = 'True';
     }
