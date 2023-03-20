@@ -1,11 +1,11 @@
-import {useROS} from '../components/ROS/ROS';
+import {useROS} from '../../components/ROS/ROS';
 import React, { useEffect, useState } from 'react'
-import BasePage from "./BasePage/BasePage"
+import BasePage from "../BasePage/BasePage"
 let listenerConnectionStatus = null;
-export default function Home(){
-    const pageName = "HOME";
+export default function ConnectionsPage(props){
+    const pageName = "CONNECTIONS";
     const { isConnected, createListener, removeListener, changeUrl} = useROS();
-    const namespace = "/ns_finale_hole"
+    const namespace = props.namespacelist[0];
     const topicPath = namespace + "/connectionStatus";
     const topicMsgType = "diagnostic_msgs/msg/KeyValue";
 
@@ -69,11 +69,28 @@ export default function Home(){
     return(
         <BasePage pageName = {pageName} pageContent={
             <div className="section w-screen justify-center">
-                <h1><b>Welcome to the urban putt san jose control site!</b></h1>
-                <p>This site is intended for urban putt personnel only.</p> 
-                <p>Enjoy!</p>
+                <h1><b>Connections</b></h1>
 
-     
+                <p className={`${isConnected?'text-green-500' : 'text-red-500' }`}> <b className="text-black">Ros Websocket: </b>{isConnected? "connected":"disconnected"}</p><br/>
+                <p className={`${serialConnectionStatus?'text-green-500' : 'text-red-500' }`}> <b className="text-black">Stepper Controller: </b>{serialConnectionStatus? "connected":"disconnected"}</p><br/>
+                
+                <div>                
+                    <div className="row">
+                        <div className="col-9 text-left">
+                            <label>Select the Ros websocket to connect to</label>
+                        </div>
+                        <div className="col-2 text-left">
+                            <select value={url} onChange={handleChange}>
+                                {optionItems}
+                            </select>
+                        </div>
+                        <div className="col-1 text-left">
+                            <label>&nbsp;</label>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         }>
         </BasePage>

@@ -1,5 +1,4 @@
-import FullscreenBtn from '../../components/FullScreenBtn';
-import Header from '../../components/Header';
+import BasePage from "../BasePage/BasePage"
 import { useROS } from '../../components/ROS/ROS';
 import ROSLIB from 'roslib'
 import React, { useEffect, useState } from 'react'
@@ -8,6 +7,8 @@ import { ReactP5Wrapper } from 'react-p5-wrapper';
 import { Link } from "react-router-dom"
 //DEFINE LISTENERS AND PUBLISHERS
 
+
+
 let listenerJointState = null;
 let publisherCmdVel = null;
 let publisherInputEvents = null;
@@ -15,7 +16,7 @@ let listenerStateMachine = null;
 
 
 export default function FinaleHolePage(props){
-
+  const pageName = "FINALE HOLE";
   const name = 'STEPPERS';
   const href = '/finaleholepage/steppers';
 
@@ -159,32 +160,27 @@ export default function FinaleHolePage(props){
 
 
   return(
-    <div className="h-screen w-screen">
-      <Header />
+    <BasePage pageName = {pageName} isFullScreen="true" pageContent={
       <div className="section w-screen justify-center">
-          <ReactP5Wrapper sketch={FinaleP5Sketch} jointStateMsg={jointStateMsg}/>
-      </div>
-      <div className="flex flex-col items-center justify-center">
-
-        <b>Hole State: </b>{stateMachineMsg}<br />
-        <b> </b> <br />
-        <b>Step Number: </b>{stepMsg} <br />
-      </div>
-      
-      <div className="flex flex-row justify-evenly mb-4 ">
+        <div className="flex flex-col items-center justify-center">
+          <ReactP5Wrapper  sketch={FinaleP5Sketch} jointStateMsg={jointStateMsg}/>
+          <b>Hole State: </b>{stateMachineMsg}<br />
+          <b> </b> <br />
+          <b>Step Number: </b>{stepMsg} <br />
+        </div>
         
-        {button}
-      </div>
+        <div className="flex flex-row justify-evenly mb-4 ">
+          
+          {button}
+        </div>
 
-      <div className="flex flex-row justify-evenly mb-4 ">
-        <button className="btn btn-black w-32 mt-4 mb-2 select-none">
-              <Link to={href}>{name}</Link>
-        </button>
+        <div className="flex flex-row justify-evenly mb-4 ">
+          <button className="btn btn-black w-32 mt-4 mb-2 select-none">
+                <Link to={href}>{name}</Link>
+          </button>
+        </div>
       </div>
-
-      <div className="fixed bottom-1 right-0 z-50">
-          <FullscreenBtn />
-      </div>
-    </div>   
+      }>
+      </BasePage>  
   );
 }

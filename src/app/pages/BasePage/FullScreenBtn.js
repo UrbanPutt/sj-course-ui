@@ -4,8 +4,8 @@ import { FaExpandAlt } from 'react-icons/fa';
 import { ImShrink2 } from 'react-icons/im';
 import { Disclosure} from '@headlessui/react'
 
-export default function FullscreenBtn() {
-  const [isFullscreen, setisFullscreen] = useState(false);
+export default function FullscreenBtn(props) {
+  const [isFullscreen, setisFullscreen] = useState(props.isFullScreen);
 
   const onFullscreen = () => {
     const elem = document.documentElement;

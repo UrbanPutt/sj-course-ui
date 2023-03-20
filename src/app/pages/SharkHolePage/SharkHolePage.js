@@ -1,5 +1,4 @@
-import FullscreenBtn from '../../components/FullScreenBtn';
-import Header from '../../components/Header';
+import BasePage from "../BasePage/BasePage"
 import { useROS } from '../../components/ROS/ROS';
 import ROSLIB from 'roslib'
 import React, { useEffect, useState } from 'react'
@@ -15,6 +14,7 @@ let publisherInputEvents = null;
 let listenerStateMachine = null;
 
 export default function SharkHolePage(){
+  const pageName = "SHARK HOLE";
   const name = 'STEPPERS';
   const href = '/sharkholepage/steppers';
 
@@ -162,35 +162,33 @@ export default function SharkHolePage(){
   }
 
   return(
-    <div className="h-screen w-screen">
-      <Header />
+    <BasePage pageName = {pageName} pageContent={
       <div className="section w-screen justify-center">
           <ReactP5Wrapper sketch={ExampleP5Sketch} torsoMsg={torsoMsg} jawMsg={jawMsg} jointStateMsg={jointStateMsg} />
+      
+        <p>Shark State: {stateMachineMsg}</p>
+        <p>Step Number: {stepMsg}</p>
+        <div className="section">
+          <button id="easyBtn" className="btn btn-blue w-32 m-4 select-none" 
+                  onClick={easyButtonClick}>
+            EASY
+          </button>
+          <button id="mediumBtn" className="btn btn-blue w-32 m-4 select-none" 
+                  onClick={easyButtonClick}>
+            MEDIUM
+          </button>
+          <button id="turboBtn" className="btn btn-blue w-32 m-4 select-none" 
+                  onClick={easyButtonClick}>
+            TURBO
+          </button>
+        </div>
+        <div className="flex flex-row justify-evenly mb-4 ">
+          <button className="btn btn-black w-32 mt-4 mb-2 select-none">
+                <Link to={href}>{name}</Link>
+          </button>
+        </div>
       </div>
-      <p>Shark State: {stateMachineMsg}</p>
-      <p>Step Number: {stepMsg}</p>
-      <div className="section">
-        <button id="easyBtn" className="btn btn-blue w-32 m-4 select-none" 
-                onClick={easyButtonClick}>
-          EASY
-        </button>
-        <button id="mediumBtn" className="btn btn-blue w-32 m-4 select-none" 
-                onClick={easyButtonClick}>
-          MEDIUM
-        </button>
-        <button id="turboBtn" className="btn btn-blue w-32 m-4 select-none" 
-                onClick={easyButtonClick}>
-          TURBO
-        </button>
-      </div>
-      <div className="flex flex-row justify-evenly mb-4 ">
-        <button className="btn btn-black w-32 mt-4 mb-2 select-none">
-              <Link to={href}>{name}</Link>
-        </button>
-      </div>
-      <div className="fixed bottom-1 right-0 z-50">
-          <FullscreenBtn />
-      </div>
-    </div>   
+    }>
+    </BasePage>  
   );
 }

@@ -1,3 +1,4 @@
+
 export default function FinaleP5Sketch(p5){
     let canvas;
     let lowerLiftPos = 0;
@@ -7,7 +8,7 @@ export default function FinaleP5Sketch(p5){
 
   
     p5.setup = () => {
-      p5.createCanvas(350, 305);
+      p5.createCanvas(375, 305);
       p5.noStroke();
       p5.fill(255);
       

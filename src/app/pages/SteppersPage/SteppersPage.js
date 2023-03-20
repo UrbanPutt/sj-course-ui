@@ -1,6 +1,6 @@
-import FullscreenBtn from '../../components/FullScreenBtn';
+import BasePage from "../BasePage/BasePage"
 import MotorStatus from './MotorStatus';
-import Header from '../../components/Header';
+
 import { useROS} from '../../components/ROS/ROS';
 import React, { useEffect, useState } from 'react'
 
@@ -9,7 +9,7 @@ let listenerMotorStatus = null;
 let listenerWebcam = null;
 
 export default function SteppersPage(props){
-
+  const pageName = props.namespace + " STEPPERS";
   const { isConnected, createListener, removeListener} = useROS();
   const namespace = props.namespace;
   const topicPathMotorStatus = namespace + "/motorStatus";
@@ -81,8 +81,7 @@ export default function SteppersPage(props){
 
   
   return(
-    <div className="h-screen w-screen">
-      <Header />
+    <BasePage pageName = {pageName} pageContent={
       
       <div className="section w-screen justify-center">
     
@@ -96,9 +95,8 @@ export default function SteppersPage(props){
           <MotorStatus statusJson={motor3Msg} name="MOTOR3" namespace={namespace} motorId="3" showButtons="false"/>
         </div>
       </div>
-      <div className="fixed bottom-1 right-0 z-50">
-          <FullscreenBtn />
-      </div>
-    </div>   
+
+    }>
+    </BasePage> 
   );
 }
