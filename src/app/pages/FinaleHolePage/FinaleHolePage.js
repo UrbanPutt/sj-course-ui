@@ -76,16 +76,16 @@ export default function FinaleHolePage(props){
 
   function btnClick(event){
     const sourceId = event.target.id;
-    if (sourceId == "resetBtn"){
+    if (sourceId === "resetBtn"){
       console.log("reset Btn");
       keyValue.key = 'reset_btn';
       keyValue.value = 'True';
     }
-    if (sourceId == "startBtn"){
+    if (sourceId === "startBtn"){
       keyValue.key = 'start_btn';
       keyValue.value = 'True';
     }
-    if (sourceId == "stopBtn"){
+    if (sourceId === "stopBtn"){
       keyValue.key = 'stop_btn';
       keyValue.value = 'True';
     }
@@ -152,7 +152,7 @@ export default function FinaleHolePage(props){
   }
   
   let button
-  if (stepMsg  == 0) {
+  if (stepMsg  === 0) {
     button =    <button id="resetBtn" className="btn btn-green w-32 m-4 select-none" onClick={btnClick}>START</button>;
   } else if(stepMsg < 800 && stepMsg >0){
     button =     <button id="stopBtn" className="btn btn-red w-32 m-4 select-none" onClick={btnClick}>STOP</button>;
@@ -162,8 +162,12 @@ export default function FinaleHolePage(props){
   return(
     <BasePage pageName = {pageName} isFullScreen="true" pageContent={
       <div className="section w-screen justify-center">
-        <div className="flex flex-col items-center justify-center">
+        <div className="max-width-full">
           <ReactP5Wrapper  sketch={FinaleP5Sketch} jointStateMsg={jointStateMsg}/>
+        </div>
+        <div className="flex flex-col items-center justify-center">
+
+         
           <b>Hole State: </b>{stateMachineMsg}<br />
           <b> </b> <br />
           <b>Step Number: </b>{stepMsg} <br />

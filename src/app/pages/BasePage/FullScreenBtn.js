@@ -1,11 +1,10 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import { FaExpandAlt } from 'react-icons/fa';
 import { ImShrink2 } from 'react-icons/im';
 import { Disclosure} from '@headlessui/react'
 
 export default function FullscreenBtn(props) {
-  const [isFullscreen, setisFullscreen] = useState(props.isFullScreen);
+  const [isFullscreen, setisFullscreen] = useState(true);
 
   const onFullscreen = () => {
     const elem = document.documentElement;
@@ -25,6 +24,14 @@ export default function FullscreenBtn(props) {
 
   };
 
+  useEffect(() => {
+
+    return() => {
+      onFullscreen();
+
+    };
+
+  },[]); //leave the array in despite the warning, it is needed for some reason
 
 
   return (

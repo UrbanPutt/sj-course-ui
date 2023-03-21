@@ -8,7 +8,7 @@ const navigation = [
   //{ name: 'Home', href: '/', current: false },
   //{ name: 'Finale', href: '/finaleholepage', current: false },
   //{ name: 'Shark', href: '/sharkholepage', current: false },
-  { name: 'Connections', href: '/connections', current: false },
+  { name: 'Connections', href: '/connections', current: false }
 ]
 
 function classNames(...classes) {
@@ -22,12 +22,12 @@ export default function Header(props) {
       {({ open }) => (
         <>
 
-          <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+          <div className="mx-auto px-2">
             <div className="absolute m-auto left-0 right-0 top-5 ">
               <h1 className="text-white text-center font-bold text-xl">{pageName}</h1>
             </div>
             <div className="relative flex h-16 items-center justify-between">
-              <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+              <div className="absolute inset-y-0 left-0 flex items-center">
                 {/* Mobile menu button*/}
    
                 <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
@@ -44,7 +44,7 @@ export default function Header(props) {
             </div>
           </div>
 
-          <Disclosure.Panel className="sm:hidden">
+          <Disclosure.Panel >
             <div className="space-y-1 px-2 pt-2 pb-3">
               {navigation.map((item) => (
                 <Disclosure.Button

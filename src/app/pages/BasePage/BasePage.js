@@ -2,8 +2,8 @@ import Header from './Header';
 import NavBar from './NavBar';
 
 export default function BasePage({pageName,pageContent,isFullScreen}){
-  console.log("pageName")
-  console.log(pageName)
+  //console.log("pageName")
+  //console.log(pageName)
 
   return(
     <div className="h-screen w-screen bg-white">

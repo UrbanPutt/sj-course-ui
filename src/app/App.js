@@ -6,12 +6,13 @@ import SharkHolePage from './pages/SharkHolePage/SharkHolePage';
 import FinaleHolePage from './pages/FinaleHolePage/FinaleHolePage';
 //import NavBarPage from './pages/NavBarPage';
 import HolesPage from './pages/HolesPage/HolesPage';
-import ConnectionsPage from './pages/Other/ConnectionsPage';
+import ConnectionsPage from './pages/ConnectionsPage/ConnectionsPage';
 
 
 const namespacelist = ["/ns_finale_hole","/ns_finale_hole"];
+const holelist = ["shark","finale"];
 function App() {
-  
+  //require('dotenv').config()
   return (
     <ROS>
         <Routes>
@@ -21,7 +22,7 @@ function App() {
             <Route path="/sharkholepage/steppers" name="Shark Hole Stepper Status Page" element={<SteppersPage namespace="/ns_shark_hole" />} />
             <Route path="/finaleholepage" name="Finale Hole Page" element={<FinaleHolePage namespace="/ns_finale_hole" />} />
             <Route path="/finaleholepage/steppers" name="Finale Hole Stepper Status Page" element={<SteppersPage namespace="/ns_finale_hole" />} />
-            <Route path="/connections" name="Connections" element={<ConnectionsPage namespacelist={namespacelist} />} />
+            <Route path="/connections" name="Connections" element={<ConnectionsPage namespacelist={namespacelist} holelist={holelist} />} />
 
             <Route path="/" name="Home" element={<Home />} />
         </Routes>

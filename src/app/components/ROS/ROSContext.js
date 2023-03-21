@@ -8,11 +8,12 @@ import ROSLIB from 'roslib'
 //const startUrl = "ws://192.168.0.209:9090";
 //const startUrl: "ws://192.168.0.36:9090",
 //const startUrl = "ws://98.53.134.144:9090"; //home
-const startUrl = "ws://71.205.218.154:9090"; //urban putt shop in denver
+//const startUrl = "ws://71.205.218.154:9090"; //urban putt shop in denver
+const defaultUrl = process.env.REACT_APP_DEFAULT_WS_URL;
 
 const rosObj = {
-  url: startUrl,
-  ROS: new ROSLIB.Ros(startUrl),
+  url: defaultUrl,
+  ROS: new ROSLIB.Ros(defaultUrl),
 
   isConnected: false,
   ROSConfirmedConnected: false,
