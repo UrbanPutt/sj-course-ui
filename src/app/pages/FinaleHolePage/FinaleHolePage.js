@@ -151,13 +151,18 @@ export default function FinaleHolePage(props){
 
   }
   
-  let button
+  let startButton;
+  let stopButton;
+  let button;
+  console.log(stepMsg)
   if (stepMsg  === 0) {
+    console.log(stepMsg)
     button =    <button id="resetBtn" className="btn btn-green w-32 m-4 select-none" onClick={btnClick}>START</button>;
   } else if(stepMsg < 800 && stepMsg >0){
     button =     <button id="stopBtn" className="btn btn-red w-32 m-4 select-none" onClick={btnClick}>STOP</button>;
   }
-
+  startButton =    <button id="resetBtn" className="btn btn-green w-32 m-4 select-none" onClick={btnClick}>START</button>;
+  stopButton =     <button id="stopBtn" className="btn btn-red w-32 m-4 select-none" onClick={btnClick}>STOP</button>;
 
   return(
     <BasePage pageName = {pageName} isFullScreen="true" pageContent={
@@ -175,7 +180,8 @@ export default function FinaleHolePage(props){
         
         <div className="flex flex-row justify-evenly mb-4 ">
           
-          {button}
+          {startButton}
+          {stopButton}
         </div>
 
         <div className="flex flex-row justify-evenly mb-4 ">
