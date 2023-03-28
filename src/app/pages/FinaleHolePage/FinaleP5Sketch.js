@@ -24,7 +24,7 @@ export default function FinaleP5Sketch(p5){
         //console.log(jointState.name[2]);
         if(jointState.name[0] === "bismuth_lift_lower_joint"){
           lowerLiftPos = Math.round(jointState.position[0]*inch_to_pixel);
-          //console.log("lowerLiftPos: " + String(lowerLiftPos));
+          console.log("lowerLiftPos: " + String(lowerLiftPos));
         }
         else if (jointState.name[0] === "bismuth_lift_upper_joint"){
           upperLiftPos = Math.round(jointState.position[0]*inch_to_pixel);
@@ -48,12 +48,13 @@ export default function FinaleP5Sketch(p5){
       p5.push();
       p5.translate(150,y_pad);
       p5.rect(0,0,5,7*inch_to_pixel);
-      p5.rect(0,lowerLiftPos,25,10);
+      p5.rect(0,7*inch_to_pixel-lowerLiftPos,25,10);
       p5.pop();
       p5.push();
       p5.translate(200,y_pad-6*inch_to_pixel);
       p5.rect(0,0,5,7*inch_to_pixel);
-      p5.rect(-25+5,upperLiftPos,25,10);
+      p5.rect(-25+5,7*inch_to_pixel-upperLiftPos,25,10);
+
     };
 
     p5.myCustomRedrawAccordingToNewPropsHandler = (newProps) => {

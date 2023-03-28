@@ -14,6 +14,19 @@ let publisherCmdVel = null;
 let publisherInputEvents = null;
 let listenerStateMachine = null;
 
+const States = {
+  "-3": "aborting",
+  "-2": "killed",
+  "-1": "error",
+  "0": "inactive",
+  "50": "resetting",
+  "100": "idle",
+  "500": "running",
+  "800": "stopping"
+};
+
+
+
 
 export default function FinaleHolePage(props){
   const pageName = "FINALE HOLE";
@@ -37,19 +50,20 @@ export default function FinaleHolePage(props){
   const [jointStateMsg, setJointStateMsg] = useState('');
   const [motor0VelDeg, setmotor0VelDeg ] = useState('0.0');
 
-  const [stateMachineMsg, setStateMachineMsg] = useState(0);
+  const [stateMachineMsg, setStateMachineMsg] = useState("aborting");
   const [stepMsg, setStepMsg] = useState(0);
 
 
   const handleStateMachineMsg = (msg) => {
     if(msg.key === 'State')
     {
-      setStateMachineMsg(String(msg.value))
+
+      setStateMachineMsg(States[msg.value])
     }
 
     if(msg.key === 'Step')
     {
-      setStepMsg(String(msg.value))
+      setStepMsg(parseInt(msg.value))
     }
     
   }
@@ -153,19 +167,17 @@ export default function FinaleHolePage(props){
   
   let startButton;
   let stopButton;
-  let button;
-  console.log(stepMsg)
+ 
   if (stepMsg  === 0) {
-    console.log(stepMsg)
-    button =    <button id="resetBtn" className="btn btn-green w-32 m-4 select-none" onClick={btnClick}>START</button>;
-  } else if(stepMsg < 800 && stepMsg >0){
-    button =     <button id="stopBtn" className="btn btn-red w-32 m-4 select-none" onClick={btnClick}>STOP</button>;
+    startButton =    <button id="resetBtn" className="btn btn-green w-32 m-4 select-none" onClick={btnClick}>START</button>;
+  } else if((stepMsg < 800 && stepMsg >0) || stateMachineMsg === '50'){
+    stopButton =     <button id="stopBtn" className="btn btn-red w-32 m-4 select-none" onClick={btnClick}>STOP</button>;
   }
-  startButton =    <button id="resetBtn" className="btn btn-green w-32 m-4 select-none" onClick={btnClick}>START</button>;
-  stopButton =     <button id="stopBtn" className="btn btn-red w-32 m-4 select-none" onClick={btnClick}>STOP</button>;
+  //startButton =    <button id="resetBtn" className="btn btn-green w-32 m-4 select-none" onClick={btnClick}>START</button>;
+  //stopButton =     <button id="stopBtn" className="btn btn-red w-32 m-4 select-none" onClick={btnClick}>STOP</button>;
 
   return(
-    <BasePage pageName = {pageName} isFullScreen="true" pageContent={
+    <BasePage pageName = {pageName} pageContent={
       <div className="section w-screen justify-center">
         <div className="max-width-full">
           <ReactP5Wrapper  sketch={FinaleP5Sketch} jointStateMsg={jointStateMsg}/>

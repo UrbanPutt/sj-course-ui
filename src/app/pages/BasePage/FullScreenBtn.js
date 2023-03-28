@@ -3,8 +3,8 @@ import { FaExpandAlt } from 'react-icons/fa';
 import { ImShrink2 } from 'react-icons/im';
 import { Disclosure} from '@headlessui/react'
 
-export default function FullscreenBtn(props) {
-  const [isFullscreen, setisFullscreen] = useState(true);
+export default function FullscreenBtn() {
+  const [isFullscreen, setisFullscreen] = useState(false);
 
   const onFullscreen = () => {
     const elem = document.documentElement;
@@ -23,15 +23,6 @@ export default function FullscreenBtn(props) {
     console.log("clickedA");
 
   };
-
-  useEffect(() => {
-
-    return() => {
-      onFullscreen();
-
-    };
-
-  },[]); //leave the array in despite the warning, it is needed for some reason
 
 
   return (
