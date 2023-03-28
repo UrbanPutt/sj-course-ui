@@ -20,9 +20,14 @@ export default function SteppersPage(props){
   const [ motor1Msg, setmotor1Msg ] = useState('{}');
   const [ motor2Msg, setmotor2Msg ] = useState('{}');
   const [ motor3Msg, setmotor3Msg ] = useState('{}');
-  const [inputs, setInputs] = useState('{}');
+  const [io, setIo] = useState('{}');
+
 
   //const [imgUrl, setImageUrl] = useState("");
+
+  function boolToOnOffString(x){
+    return x ? "on":"off";
+  }
 
   const handleMsg = (msg) => {
     //console.log("handleMsg: steppers");
@@ -43,7 +48,8 @@ export default function SteppersPage(props){
     }
     var status = msg.value ? JSON.parse(msg.value): JSON.parse("{}");
     const io = status.io ? status.io : "";
-    setInputs(io);
+    console.log(io.IO1);
+    setIo(io);
   }
 
   const handleWebcamMsg = (msg) => {
@@ -100,7 +106,15 @@ export default function SteppersPage(props){
           <MotorStatus statusJson={motor2Msg} name="MOTOR2" namespace={namespace} motorId="2" showButtons="true"/>
           <MotorStatus statusJson={motor3Msg} name="MOTOR3" namespace={namespace} motorId="3" showButtons="false"/>
         </div>
-        <b>Inputs </b>{inputs} <br />
+        <b>Inputs </b> <br />
+        <b> </b>IN0: {boolToOnOffString(io.IO0)} <br />
+        <b> </b>IN1: {boolToOnOffString(io.IO1)} <br />
+        <b> </b>IN2: {boolToOnOffString(io.IO2)} <br />
+        <b> </b>IN3: {boolToOnOffString(io.IO3)} <br />
+        <b> </b>IN4: {boolToOnOffString(io.IO4)} <br />
+        <b> </b>IN5: {boolToOnOffString(io.IO5)} <br />
+        <b> </b>IN6: {boolToOnOffString(io.IO6)} <br />
+        <b> </b>IN7: {boolToOnOffString(io.IO7)} <br />
       </div>
 
     }>
