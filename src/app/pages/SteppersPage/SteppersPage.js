@@ -20,6 +20,7 @@ export default function SteppersPage(props){
   const [ motor1Msg, setmotor1Msg ] = useState('{}');
   const [ motor2Msg, setmotor2Msg ] = useState('{}');
   const [ motor3Msg, setmotor3Msg ] = useState('{}');
+  const [inputs, setInputs] = useState('{}');
 
   //const [imgUrl, setImageUrl] = useState("");
 
@@ -28,6 +29,8 @@ export default function SteppersPage(props){
     if (msg.key === '0')
     {
       setmotor0Msg(String(msg.value));
+     
+    //console.log(io)
     }
     else if (msg.key === '1'){
       setmotor1Msg(String(msg.value));
@@ -38,6 +41,9 @@ export default function SteppersPage(props){
     else if (msg.key === '3'){
       setmotor3Msg(String(msg.value));
     }
+    var status = msg.value ? JSON.parse(msg.value): JSON.parse("{}");
+    const io = status.io ? status.io : "";
+    setInputs(io);
   }
 
   const handleWebcamMsg = (msg) => {
@@ -94,6 +100,7 @@ export default function SteppersPage(props){
           <MotorStatus statusJson={motor2Msg} name="MOTOR2" namespace={namespace} motorId="2" showButtons="true"/>
           <MotorStatus statusJson={motor3Msg} name="MOTOR3" namespace={namespace} motorId="3" showButtons="false"/>
         </div>
+        <b>Inputs </b>{inputs} <br />
       </div>
 
     }>
