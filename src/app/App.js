@@ -11,6 +11,7 @@ import ConnectionsPage from './pages/ConnectionsPage/ConnectionsPage';
 
 const namespacelist = ["/ns_finale_hole","/ns_finale_hole"];
 const holelist = ["shark","finale"];
+
 function App() {
   //require('dotenv').config()
   return (

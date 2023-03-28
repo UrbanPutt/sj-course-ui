@@ -40,7 +40,7 @@ const States = {
 
 export default function FinaleHolePage(props){
   const pageName = "FINALE HOLE";
-  const name = 'STEPPERS';
+  
   const href = '/finaleholepage/steppers';
 
   const namespace = props.namespace
@@ -220,7 +220,7 @@ export default function FinaleHolePage(props){
 
         <div className="flex flex-row justify-evenly mb-4 ">
           <button className="btn btn-black w-32 mt-4 mb-2 select-none">
-                <Link to={href}>{name}</Link>
+                <Link to={href}>STEPPERS</Link>
           </button>
         </div>
       </div>

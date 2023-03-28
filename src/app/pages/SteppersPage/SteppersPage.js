@@ -22,6 +22,14 @@ export default function SteppersPage(props){
   const [ motor3Msg, setmotor3Msg ] = useState('{}');
   const [io, setIo] = useState('{}');
 
+  let stepperNames = ["MOTOR0", "MOTOR1", "MOTOR2", "MOTOR3"];
+  if(namespace == "/ns_finale_hole"){
+    stepperNames = ["LOWER LIFT", "UPPER LIFT", "BALL RETURN", "N/A"]
+  }
+  else if(namespace == "/ns_shark_hole"){
+    stepperNames = ["TORSO", "JAW", "N/A", "N/A"]
+  }
+ 
 
   //const [imgUrl, setImageUrl] = useState("");
 
@@ -90,21 +98,19 @@ export default function SteppersPage(props){
   },[]); //leave the array in despite the warning, it is needed for some reason
   
 
-
-  
   return(
     <BasePage pageName = {pageName} pageContent={
       
       <div className="section w-screen justify-center">
     
         <div className="flex flex-row justify-evenly sm:justify-start mb-4 ">
-          <MotorStatus statusJson={motor0Msg} name="MOTOR0" namespace={namespace} motorId="0" showButtons="true" />
-          <MotorStatus statusJson={motor1Msg} name="MOTOR1" namespace={namespace} motorId="1" showButtons="true" />
+          <MotorStatus statusJson={motor0Msg} name={stepperNames[0]} namespace={namespace} motorId="0" showButtons="true" />
+          <MotorStatus statusJson={motor1Msg} name={stepperNames[1]} namespace={namespace} motorId="1" showButtons="true" />
           
         </div>
         <div className="flex flex-row justify-evenly sm:justify-start mb-4">
-          <MotorStatus statusJson={motor2Msg} name="MOTOR2" namespace={namespace} motorId="2" showButtons="true"/>
-          <MotorStatus statusJson={motor3Msg} name="MOTOR3" namespace={namespace} motorId="3" showButtons="false"/>
+          <MotorStatus statusJson={motor2Msg} name={stepperNames[2]} namespace={namespace} motorId="2" showButtons="true"/>
+          <MotorStatus statusJson={motor3Msg} name={stepperNames[3]} namespace={namespace} motorId="3" showButtons="false"/>
         </div>
         <b>Inputs </b> <br />
         <b> </b>IN0: {boolToOnOffString(io.IO0)} <br />
