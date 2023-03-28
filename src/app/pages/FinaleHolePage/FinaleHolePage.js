@@ -102,7 +102,6 @@ export default function FinaleHolePage(props){
   function btnClick(event){
     const sourceId = event.target.id;
     if (sourceId === "resetBtn"){
-      console.log("reset Btn");
       keyValue.key = 'reset_btn';
       keyValue.value = 'True';
     }
@@ -127,6 +126,8 @@ export default function FinaleHolePage(props){
     if (publisherInputEvents !== null && isConnected)
     {
       publisherInputEvents.publish(keyValue);
+      console.log("publish an input event: ")
+      console.log(keyValue.key);
     }
   }
 
@@ -184,11 +185,11 @@ export default function FinaleHolePage(props){
  
   if (stepMsg  === 0) {
     startButton = <button id="resetBtn" className="btn btn-start w-32 m-4 select-none" onClick={btnClick}>START</button>;
-  } else if((stepMsg < 800 && stepMsg >0) || state===States["running"]){
+  } else if((stepMsg < States["stopping"] && stepMsg >States["inactive"]) || state===States["running"]){
     stopButton = <button id="stopBtn" className="btn btn-stop w-32 m-4 select-none" onClick={btnClick}>STOP</button>;
   }
 
-  if (state  !== States["inactive"] && state!==States["aborting"] && state!==States["killed"] && state!==States["error"] ) {
+  if (stepMsg  > States["inactive"] ) {
     killButton = <button id="killBtn" className="btn btn-kill w-32 m-4 select-none" onClick={btnClick}>KILL</button>;
   } 
   if (state  === States["error"]) {
