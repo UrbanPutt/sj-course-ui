@@ -14,7 +14,7 @@ let publisherCmdVel = null;
 let publisherInputEvents = null;
 let listenerStateMachine = null;
 
-const States = {
+const StateString = {
   "-3": "aborting",
   "-2": "killed",
   "-1": "error",
@@ -25,6 +25,16 @@ const States = {
   "800": "stopping"
 };
 
+const States = {
+  "aborting":-3,
+  "killed":-2,
+  "error":-1,
+  "inactive":0,
+  "resetting":50,
+  "idle":100,
+  "running":500,
+  "stopping":800
+}
 
 
 
@@ -35,35 +45,36 @@ export default function FinaleHolePage(props){
 
   const namespace = props.namespace
   const { isConnected, createListener, createPublisher, removeListener} = useROS();
-  const topicPathMotorStatus = namespace + "/motorStatus";
+  //const topicPathMotorStatus = namespace + "/motorStatus";
   const keyValueMsgType = "diagnostic_msgs/msg/KeyValue";
   const topicPathJointState = namespace + "/jointState";
   const jointStateMsgType = "sensor_msgs/msg/JointState";
   const topicPathStateMachine = namespace + "/stateMachine";
 
-  const [ motor0Msg, setmotor0Msg ] = useState('{}');
-  const [ motor1Msg, setmotor1Msg ] = useState('{}');
-  const [ motor2Msg, setmotor2Msg ] = useState('{}');
+  //const [ motor0Msg, setmotor0Msg ] = useState('{}');
+  //const [ motor1Msg, setmotor1Msg ] = useState('{}');
+  //const [ motor2Msg, setmotor2Msg ] = useState('{}');
   //const [ motor3Msg, setmotor3Msg ] = useState('{}');
   
 
   const [jointStateMsg, setJointStateMsg] = useState('');
   const [motor0VelDeg, setmotor0VelDeg ] = useState('0.0');
 
-  const [stateMachineMsg, setStateMachineMsg] = useState("aborting");
+  const [stateMsg, setStateMsg] = useState("aborting");
+  const [state, setState] = useState(0);
   const [stepMsg, setStepMsg] = useState(0);
 
 
   const handleStateMachineMsg = (msg) => {
     if(msg.key === 'State')
     {
-
-      setStateMachineMsg(States[msg.value])
+      setStateMsg(StateString[msg.value]);
+      setState(parseInt(msg.value));
     }
 
     if(msg.key === 'Step')
     {
-      setStepMsg(parseInt(msg.value))
+      setStepMsg(parseInt(msg.value));
     }
     
   }
@@ -75,10 +86,10 @@ export default function FinaleHolePage(props){
     setJointStateMsg(msg);
     if(msg.name[0] === "bismuth_lift_lower_joint"){
       
-      const motor0PosDeg = msg.position[0];
-      const motor0PosRad = motor0PosDeg*Math.PI/180.0; //convert to radians
+      //const motor0PosDeg = msg.position[0];
+      //const motor0PosRad = motor0PosDeg*Math.PI/180.0; //convert to radians
       //console.log("torsoVel: " + String(msg.velocity[0]));
-      setmotor0VelDeg(msg.velocity[0]);
+      //setmotor0VelDeg(msg.velocity[0]);
     }
   }
 
@@ -103,6 +114,14 @@ export default function FinaleHolePage(props){
       keyValue.key = 'stop_btn';
       keyValue.value = 'True';
     }
+    if (sourceId === "clearBtn"){
+      keyValue.key = 'clear_btn';
+      keyValue.value = 'True';
+    }
+    if (sourceId === "killBtn"){
+      keyValue.key = 'kill_btn';
+      keyValue.value = 'True';
+    }
     
     
     if (publisherInputEvents !== null && isConnected)
@@ -119,13 +138,6 @@ export default function FinaleHolePage(props){
   });
 
 
-  function stopMotor(event){
-    jointState.velocity[0] = 0.0;
-    if (publisherCmdVel !== null && isConnected)
-    {
-      publisherCmdVel.publish(jointState);
-    }
-  }
 
   useEffect(() => {
 
@@ -167,14 +179,21 @@ export default function FinaleHolePage(props){
   
   let startButton;
   let stopButton;
+  let killButton;
+  let clearButton;
  
   if (stepMsg  === 0) {
-    startButton =    <button id="resetBtn" className="btn btn-green w-32 m-4 select-none" onClick={btnClick}>START</button>;
-  } else if((stepMsg < 800 && stepMsg >0) || stateMachineMsg === '50'){
-    stopButton =     <button id="stopBtn" className="btn btn-red w-32 m-4 select-none" onClick={btnClick}>STOP</button>;
+    startButton = <button id="resetBtn" className="btn btn-start w-32 m-4 select-none" onClick={btnClick}>START</button>;
+  } else if((stepMsg < 800 && stepMsg >0) || state===States["running"]){
+    stopButton = <button id="stopBtn" className="btn btn-stop w-32 m-4 select-none" onClick={btnClick}>STOP</button>;
   }
-  //startButton =    <button id="resetBtn" className="btn btn-green w-32 m-4 select-none" onClick={btnClick}>START</button>;
-  //stopButton =     <button id="stopBtn" className="btn btn-red w-32 m-4 select-none" onClick={btnClick}>STOP</button>;
+
+  if (state  !== States["inactive"] && state!==States["aborting"] && state!==States["killed"] && state!==States["error"] ) {
+    killButton = <button id="killBtn" className="btn btn-kill w-32 m-4 select-none" onClick={btnClick}>KILL</button>;
+  } 
+  if (state  === States["error"]) {
+    clearButton = <button id="clearBtn" className="btn btn-clear w-32 m-4 select-none border-black" onClick={btnClick}>CLEAR</button>;
+  } 
 
   return(
     <BasePage pageName = {pageName} pageContent={
@@ -185,7 +204,7 @@ export default function FinaleHolePage(props){
         <div className="flex flex-col items-center justify-center">
 
          
-          <b>Hole State: </b>{stateMachineMsg}<br />
+          <b>Hole State: </b>{StateString[String(state)]}<br />
           <b> </b> <br />
           <b>Step Number: </b>{stepMsg} <br />
         </div>
@@ -194,6 +213,8 @@ export default function FinaleHolePage(props){
           
           {startButton}
           {stopButton}
+          {killButton}
+          {clearButton}
         </div>
 
         <div className="flex flex-row justify-evenly mb-4 ">
