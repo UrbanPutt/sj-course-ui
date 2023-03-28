@@ -19,10 +19,10 @@ function App() {
         <Routes>
             <Route path="/sj-course-ui" element={<Navigate to="/" />}/>
             <Route path="/holes" name="Holes" element={<HolesPage namespace="/ns_shark_hole"/>} />
-            <Route path="/sharkholepage" name="Shark Hole Page" element={<SharkHolePage namespace="/ns_shark_hole"/>} />
-            <Route path="/sharkholepage/steppers" name="Shark Hole Stepper Status Page" element={<SteppersPage namespace="/ns_shark_hole" />} />
+            <Route path="/sharkholepage" name="Shark Hole Page" element={<SharkHolePage namespace="/ns_shark_hole" />} />
+            <Route path="/sharkholepage/steppers" name="Shark Hole Stepper Status Page" element={<SteppersPage namespace="/ns_shark_hole" label="SHARK"/>} />
             <Route path="/finaleholepage" name="Finale Hole Page" element={<FinaleHolePage namespace="/ns_finale_hole" />} />
-            <Route path="/finaleholepage/steppers" name="Finale Hole Stepper Status Page" element={<SteppersPage namespace="/ns_finale_hole" />} />
+            <Route path="/finaleholepage/steppers" name="Finale Hole Stepper Status Page" element={<SteppersPage namespace="/ns_finale_hole" label="FINALE" />} />
             <Route path="/connections" name="Connections" element={<ConnectionsPage namespacelist={namespacelist} holelist={holelist} />} />
 
             <Route path="/" name="Home" element={<Home />} />

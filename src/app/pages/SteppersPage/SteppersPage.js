@@ -9,7 +9,8 @@ let listenerMotorStatus = null;
 let listenerWebcam = null;
 
 export default function SteppersPage(props){
-  const pageName = props.namespace + " STEPPERS";
+  const label = props.label;
+  const pageName = label + " STEPPERS";
   const { isConnected, createListener, removeListener} = useROS();
   const namespace = props.namespace;
   const topicPathMotorStatus = namespace + "/motorStatus";
