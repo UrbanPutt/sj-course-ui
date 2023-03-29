@@ -1,21 +1,29 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import ROSLIB from 'roslib'
 import { useROS} from '../../components/ROS/ROS';
 
 let publisherCmdVel = null;
 let publisherCmds = null;
+let clientMotorInfo = null;
 
 export default function MotorStatus(props) {
   //const [eventLogPrev, setEventLogPrev]=useState(" ");
   //const [eventLog, setEventLog]=useState(" ");
+  const clientMotorInfo = props.client;
 
   const motorId = props.motorId;
   var status = props.statusJson ? JSON.parse(props.statusJson): JSON.parse("{}");
   const switches = status.switches ? status.switches : "";
   const statusBits = status.statusBits ? status.statusBits : "";
   const namespace = props.namespace
-  const { isConnected, createPublisher} = useROS();
+  const { ros, isConnected, createPublisher} = useROS();
   //const [publisherCmdVel,setPublisherCmdVel]=useState(null);
+
+  // INFO JSON
+  const [ motorInfoJson, setMotorInfoJson ] = useState('{}');
+  const [ infoFlag, setInfoFlag ] = useState(false);
+  var info = motorInfoJson ? JSON.parse(motorInfoJson): JSON.parse("{}");
+
 
 
   var jointStateCmd = new ROSLIB.Message({
@@ -43,6 +51,32 @@ export default function MotorStatus(props) {
   {
     publisherCmdVel = createPublisher(namespace + "/cmd_vel_scaled_jointState","sensor_msgs/msg/JointState");
     publisherCmds = createPublisher(namespace + "/cmds","diagnostic_msgs/msg/KeyValue")
+
+  }
+
+
+
+
+  async function makeServiceRequest(codeChr,idChr){
+    var request = new ROSLIB.ServiceRequest({
+      key : codeChr + idChr,
+      value : ""
+    });
+  
+    clientMotorInfo.callService(request, function(result) {
+      console.log('Result for service call on '
+        + clientMotorInfo.name
+        + ': '
+        + result.key
+        + ', '
+        + result.value);
+      
+      var infoJson = motorInfoJson
+      //var index = parseInt(result.key[1])
+      infoJson = result.value;
+      setMotorInfoJson(infoJson);
+    });
+
   }
 
   function jogMotorPos(event){
@@ -111,6 +145,7 @@ export default function MotorStatus(props) {
   function zeroMotor(event){
     publishMotorCmd("Z","0");
     console.log(String(motorId))
+    makeServiceRequest('P',String(motorId));
   }
 
   function enableMotor(event){
@@ -136,16 +171,6 @@ export default function MotorStatus(props) {
   */
   
 
-  function showZeroBtn(){
-    return(
-    <button className="btn btn-white w-32 mt-4 mb-2 select-none" 
-    onTouchStart={zeroMotor} onTouchEnd={()=>{}} onTouchCancel={()=>{}} 
-    onMouseDown={zeroMotor} onMouseUp={()=>{}} onMouseLeave={()=>{}}>
-    ZERO
-  </button>
-    );
-  }
-
 
   let index = 0
   const zeroBtnJsx = <button key={index} className="btn btn-white w-32 mt-4 mb-2 select-none" 
@@ -153,6 +178,7 @@ export default function MotorStatus(props) {
     onMouseDown={zeroMotor} onMouseUp={()=>{}} onMouseLeave={()=>{}}>
     ZERO
     </button>;
+  
 
   index++;
   const enableBtnJsx = <button key={index} className="btn btn-green w-32 mt-4 mb-2 select-none" 
@@ -215,7 +241,10 @@ export default function MotorStatus(props) {
         btnList.push(jogPosBtnJsx);
         btnList.push(jogNegBtnJsx);
         btnList.push(homeBtnJsx);
-        btnList.push(zeroBtnJsx);
+        //console.log("status.Homed: " + String(status.Homed))
+        if (statusBits.Homed){
+          btnList.push(zeroBtnJsx);
+        }
         btnList.push(killBtnJsx);
         break;
 
@@ -240,6 +269,16 @@ export default function MotorStatus(props) {
   }
 
 
+  if (isConnected & clientMotorInfo !== null & !infoFlag)
+  {
+    setInfoFlag(true);
+    makeServiceRequest('P',String(motorId));
+  }
+  else if (!isConnected & infoFlag){
+    console.log("connection lost, restting infoFlag")
+    setInfoFlag(false);
+  }
+
   return (
 
     <div className= "flex flex-col bg-gray-100 p-2 mr-4 rounded-md w-5/12 md:w-1/4">
@@ -252,12 +291,13 @@ export default function MotorStatus(props) {
       <p className={`${switches.PositiveLimSw?'text-green-500' : 'text-red-500' }`}> PosLimSw: {boolToOnOffString(switches.PositiveLimSw)}</p> 
       <p className={`${switches.NegativeLimSw?'text-green-500' : 'text-red-500' }`}> NegLimSw: {boolToOnOffString(switches.NegativeLimSw)}</p> 
       <b></b>HomeSw: {boolToOnOffString(switches.HomeSw)} <br />
-      <b>Status Bits </b>AtPos: {boolToStatusBit(statusBits.AtPosition)} <br />
+      <b>Status Bits </b>AtPosition: {boolToStatusBit(statusBits.AtPosition)} <br />
       <b></b>Moving: {boolToStatusBit(statusBits.Moving)} <br />
       <b></b>Enabled: {boolToStatusBit(statusBits.Enabled)} <br />
       <b></b>Faulted: {boolToStatusBit(statusBits.Faulted)} <br />
       <b></b>Ready: {boolToStatusBit(statusBits.Ready)} <br />
       <b></b>Homed: {boolToStatusBit(statusBits.Homed)} <br />
+      <b>Info</b>homeOffset: {info.homeOffsetFromZero} <br />
 
       {(() => {
         if(props.showButtons){
