@@ -13,8 +13,8 @@ let init = false;
 
 export default function OpSettingsSwitchesGroup(props) {
   const [state, setState] = useState({
-      occupancyOverridden: "false",
-      safetyOverridden: "false",
+      occupancyOverridden: false,
+      safetyOverridden: false,
       startMode: 0,
       resetMode: 0,
     
@@ -68,6 +68,15 @@ export default function OpSettingsSwitchesGroup(props) {
     init = false;
   }
 
+
+  function updateOccupancySettingsState(js){
+    setState({
+      ...state,
+      ["safetyOverridden"]: js["safetyOverridden"],
+      ["occupancyOverridden"]: js["occupancyOverridden"],
+    });
+  }
+
   async function makeServiceRequest(settingName,settingVal,client){
     var request = new ROSLIB.ServiceRequest({
       key : settingName,
@@ -82,10 +91,10 @@ export default function OpSettingsSwitchesGroup(props) {
         + ', '
         + result.value);
       
-      var newState = result.value
+      var newState = JSON.parse(result.value)
       console.log("newState: ")
       console.log(newState)
-      setState(newState);
+      updateOccupancySettingsState(newState);
     });
 
   }
@@ -107,8 +116,8 @@ export default function OpSettingsSwitchesGroup(props) {
 
 
   
-
-
+  //console.log("state.occupancyOverridden")
+  //console.log(state.occupancyOverridden)
 
   return (
     <FormControl component="fieldset" variant="standard">
@@ -116,13 +125,13 @@ export default function OpSettingsSwitchesGroup(props) {
       <FormGroup>
         <FormControlLabel
           control={
-            <Switch checked={state.occupancyOverridden==="true"} onChange={handleChange} name="occupancyOverridden" />
+            <Switch checked={state.occupancyOverridden} onChange={handleChange} name="occupancyOverridden" />
           }
           label="Occupancy"
         />
         <FormControlLabel
           control={
-            <Switch checked={state.safetyOverridden==="true"} onChange={handleChange} name="safetyOverridden" />
+            <Switch checked={state.safetyOverridden} onChange={handleChange} name="safetyOverridden" />
           }
           label="Safety"
         />
