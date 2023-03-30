@@ -10,7 +10,7 @@ export default function MotorStatus(props) {
   //const [eventLogPrev, setEventLogPrev]=useState(" ");
   //const [eventLog, setEventLog]=useState(" ");
   const clientMotorInfo = props.client;
-
+  
   const motorId = props.motorId;
   var status = props.statusJson ? JSON.parse(props.statusJson): JSON.parse("{}");
   const switches = status.switches ? status.switches : "";
@@ -23,7 +23,7 @@ export default function MotorStatus(props) {
   const [ motorInfoJson, setMotorInfoJson ] = useState('{}');
   const [ infoFlag, setInfoFlag ] = useState(false);
   var info = motorInfoJson ? JSON.parse(motorInfoJson): JSON.parse("{}");
-
+  const name = info.jointName? info.jointName:props.name;
 
 
   var jointStateCmd = new ROSLIB.Message({
@@ -282,7 +282,7 @@ export default function MotorStatus(props) {
   return (
 
     <div className= "flex flex-col bg-gray-100 p-2 mr-4 rounded-md w-5/12 md:w-1/4">
-      <b className="text-xl">{props.name}</b>
+      <b className="text-xl">{name}</b>
        <b></b><br />
       <b>Mode </b> {intToModeString(status.mode)}<br />
       <b>Act/Ref Position </b>{status.actualPosition} / {status.referencePosition} <br />

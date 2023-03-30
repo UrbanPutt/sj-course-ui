@@ -22,6 +22,7 @@ const rosObj = {
   services:[],
   listeners: [],
   publishers: [],
+  finaleSettingsClient: null,
 }
 
 const ROSContext = createContext([{}, () => {}]);

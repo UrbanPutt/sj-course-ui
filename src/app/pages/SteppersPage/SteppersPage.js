@@ -14,6 +14,7 @@ export default function SteppersPage(props){
   const pageName = label + " STEPPERS";
   const { ros, isConnected, createListener, removeListener} = useROS();
   const namespace = props.namespace;
+  const servicePathMotorInfo = namespace + "/stepper_info";
   const topicPathMotorStatus = namespace + "/motorStatus";
   const topicMotorStatusMsgType = "diagnostic_msgs/msg/KeyValue";
   const imageRawCompressedMsgType = "sensor_msgs/msg/CompressedImage"
@@ -107,21 +108,13 @@ export default function SteppersPage(props){
 
   if (isConnected & clientMotorInfo === null)
   {
-    let serviceName = namespace + '/stepper_info';
+    let serviceName = servicePathMotorInfo;
     clientMotorInfo = new ROSLIB.Service({
       ros : ros,
       name : serviceName,
       serviceType : 'custom_intefaces/Info'
       });
     console.log("service: " + serviceName)
-    /*
-    var intervalId = setInterval(async function() {
-      makeServiceRequest('P','0');
-      makeServiceRequest('P','1');
-      makeServiceRequest('P','2');
-      makeServiceRequest('P','3')
-    }, 1000);
-    */
   }
 
 

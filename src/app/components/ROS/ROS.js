@@ -55,7 +55,7 @@ function useROS() {
       //handleConnect();
     }
     
-  },3000);
+  },1000);
 
   function toggleConnection() {
     if (ros.isConnected) {
@@ -202,6 +202,7 @@ function useROS() {
         setROS(ros => ({ ...ros, ROSConfirmedConnected: false }));
         getTopics();
         getServices();
+        //createServiceClients();
         console.log("connected!")
       })
 
@@ -236,6 +237,20 @@ function useROS() {
     setROS(ros => ({ ...ros, topics: [] }));
     setROS(ros => ({ ...ros, listeners: [] }));
     setROS(ros => ({ ...ros, ROSConfirmedConnected: false }));
+  }
+
+  function createServiceClients(){
+    //console.log("creating service clients for ros context")
+    let serviceName = '/ns_finale_hole/operation_settings';
+    const cl = new ROSLIB.Service({
+      ros : ros,
+      name : serviceName,
+      serviceType : 'custom_intefaces/Info'
+      });
+    console.log("service client created: " + serviceName)
+    ros.finaleSettingsClient = cl;
+    //setROS(ros => ({ ...ros, finaleSettingsClient: cl }))
+
   }
 
   const removeAllListeners = () => {
@@ -291,6 +306,7 @@ function useROS() {
     topics: ros.topics,
     services: ros.services,
     listeners: ros.listeners,
+    finaleSettingsClient: ros.finaleSettingsClient,
   }
 }
 

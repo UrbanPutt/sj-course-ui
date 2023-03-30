@@ -1,5 +1,6 @@
 import BasePage from "../BasePage/BasePage"
 import { useROS } from '../../components/ROS/ROS';
+import OpSettingsSwitchesGroup from  '../../components/buttons/OpSettingsSwitchesGroup';
 import ROSLIB from 'roslib'
 import React, { useEffect, useState } from 'react'
 import FinaleP5Sketch from './FinaleP5Sketch';
@@ -10,7 +11,6 @@ import { Link } from "react-router-dom"
 
 
 let listenerJointState = null;
-let publisherCmdVel = null;
 let publisherInputEvents = null;
 let listenerStateMachine = null;
 
@@ -44,7 +44,7 @@ export default function FinaleHolePage(props){
   const href = '/finaleholepage/steppers';
 
   const namespace = props.namespace
-  const { isConnected, createListener, createPublisher, removeListener} = useROS();
+  const { finaleSettingsClient, isConnected, createListener, createPublisher, removeListener} = useROS();
   //const topicPathMotorStatus = namespace + "/motorStatus";
   const keyValueMsgType = "diagnostic_msgs/msg/KeyValue";
   const topicPathJointState = namespace + "/jointState";
@@ -161,8 +161,7 @@ export default function FinaleHolePage(props){
       Number(0),
       'none');
       listenerJointState.subscribe(handleJointStateMsg);
-    //publisherCmdVel = createPublisher("/cmd_vel_scaled_twist","geometry_msgs/msg/Twist");
-    publisherCmdVel = createPublisher(namespace + "/cmd_vel_scaled_jointState",jointStateMsgType);
+
     publisherInputEvents = createPublisher(namespace + "/input_events",keyValueMsgType);
     console.log("subscribe: finale")
   }
@@ -223,6 +222,9 @@ export default function FinaleHolePage(props){
                 <Link to={href}>STEPPERS</Link>
           </button>
         </div>
+
+        <OpSettingsSwitchesGroup/>
+      
       </div>
       }>
       </BasePage>  
