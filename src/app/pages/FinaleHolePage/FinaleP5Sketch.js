@@ -24,7 +24,7 @@ export default function FinaleP5Sketch(p5){
         //console.log(jointState.name[2]);
         if(jointState.name[0] === "bismuth_lift_lower_joint"){
           lowerLiftPos = Math.round(jointState.position[0]*inch_to_pixel);
-          console.log("lowerLiftPos: " + String(lowerLiftPos));
+          //console.log("lowerLiftPos: " + String(lowerLiftPos));
         }
         else if (jointState.name[0] === "bismuth_lift_upper_joint"){
           upperLiftPos = Math.round(jointState.position[0]*inch_to_pixel);
