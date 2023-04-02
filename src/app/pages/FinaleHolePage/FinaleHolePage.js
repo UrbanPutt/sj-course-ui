@@ -223,7 +223,9 @@ export default function FinaleHolePage(props){
           </button>
         </div>
 
-        <OpSettingsSwitchesGroup/>
+        <OpSettingsSwitchesGroup settingsGroup="bismuth" label="Bismuth"/>
+        <OpSettingsSwitchesGroup settingsGroup="cropcircle" label="Crop Circle"/>
+        <OpSettingsSwitchesGroup settingsGroup="ballreturn" label="Ball Return"/>
       
       </div>
       }>

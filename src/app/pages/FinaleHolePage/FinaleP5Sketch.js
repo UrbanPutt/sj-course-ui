@@ -45,14 +45,22 @@ export default function FinaleP5Sketch(p5){
 
     p5.draw = () => {
       p5.background(51);
+      p5.textSize(15);
+      p5.fill(150,150,150)
+      p5.text('lower lift',80,300)
+      p5.text('upper lift',220,180)
       p5.push();
+      p5.fill(150,150,150)
       p5.translate(150,y_pad);
       p5.rect(0,0,5,7*inch_to_pixel);
+      p5.fill(255,255,255)
       p5.rect(0,7*inch_to_pixel-lowerLiftPos,25,10);
       p5.pop();
       p5.push();
+      p5.fill(150,150,150)
       p5.translate(200,y_pad-6*inch_to_pixel);
       p5.rect(0,0,5,7*inch_to_pixel);
+      p5.fill(255,255,255)
       p5.rect(-25+5,7*inch_to_pixel-upperLiftPos,25,10);
 
     };
