@@ -5,9 +5,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link } from "react-router-dom"
 
 const navigation = [
-  //{ name: 'Home', href: '/', current: false },
-  //{ name: 'Finale', href: '/finaleholepage', current: false },
-  //{ name: 'Shark', href: '/sharkholepage', current: false },
+
   { name: 'Connections', href: '/connections', current: false }
 ]
 
@@ -15,13 +13,18 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
+
+
+
 export default function Header(props) {
   const pageName = props.pageName;
+  const bannerColor = props.bannerColor? props.bannerColor: "bg-gray-800";
+  const bannerStyle = "absolute left-0 right-0 top-5 " + bannerColor;
+
   return (
-    <Disclosure as="nav" className="bg-gray-800">
+    <Disclosure as="nav" className={bannerColor}>
       {({ open }) => (
         <>
-
           <div className="mx-auto px-2">
             <div className="absolute m-auto left-0 right-0 top-5 ">
               <h1 className="text-white text-center font-bold text-xl">{pageName}</h1>

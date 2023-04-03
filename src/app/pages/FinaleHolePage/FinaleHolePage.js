@@ -13,6 +13,7 @@ import { Link } from "react-router-dom"
 let listenerJointState = null;
 let publisherInputEvents = null;
 let listenerStateMachine = null;
+let listenerInfo = null;
 
 const StateString = {
   "-3": "aborting",
@@ -50,6 +51,7 @@ export default function FinaleHolePage(props){
   const topicPathJointState = namespace + "/jointState";
   const jointStateMsgType = "sensor_msgs/msg/JointState";
   const topicPathStateMachine = namespace + "/stateMachine";
+  const topicPathInfo = namespace + "/info";
 
   //const [ motor0Msg, setmotor0Msg ] = useState('{}');
   //const [ motor1Msg, setmotor1Msg ] = useState('{}');
@@ -63,9 +65,11 @@ export default function FinaleHolePage(props){
   const [stateMsg, setStateMsg] = useState("aborting");
   const [state, setState] = useState(0);
   const [stepMsg, setStepMsg] = useState(0);
+  const [errors, setErrors] = useState(JSON.parse('{"present": false, "list": [""]}'));
+  const [warnings, setWarnings] = useState(JSON.parse('{"present": false, "list": [""]}'));
+  const [info, setInfo] = useState(JSON.parse('{"cropcircleMotor": false}'));
 
-
-  const handleStateMachineMsg = (msg) => {
+  const handleKeyValueMsg = (msg) => {
     if(msg.key === 'State')
     {
       setStateMsg(StateString[msg.value]);
@@ -75,6 +79,22 @@ export default function FinaleHolePage(props){
     if(msg.key === 'Step')
     {
       setStepMsg(parseInt(msg.value));
+    }
+
+    if(msg.key === "Errors")
+    {
+      console.log("Errors: " + msg.value)
+      setErrors(JSON.parse(msg.value));
+    }
+
+    if(msg.key === "Warnings")
+    {
+      setWarnings(JSON.parse(msg.value));
+    }
+
+    if(msg.key === "Info")
+    {
+      setInfo(JSON.parse(msg.value));
     }
     
   }
@@ -86,10 +106,6 @@ export default function FinaleHolePage(props){
     setJointStateMsg(msg);
     if(msg.name[0] === "bismuth_lift_lower_joint"){
       
-      //const motor0PosDeg = msg.position[0];
-      //const motor0PosRad = motor0PosDeg*Math.PI/180.0; //convert to radians
-      //console.log("torsoVel: " + String(msg.velocity[0]));
-      //setmotor0VelDeg(msg.velocity[0]);
     }
   }
 
@@ -145,8 +161,10 @@ export default function FinaleHolePage(props){
     return() => {
       removeListener(listenerJointState);
       removeListener(listenerStateMachine);
+      removeListener(listenerInfo);
       listenerJointState = null;
       listenerStateMachine = null;
+      listenerInfo = null;
       console.log("cleanup: shark");
     };
 
@@ -173,7 +191,18 @@ export default function FinaleHolePage(props){
       keyValueMsgType,
       Number(0),
       'none');
-      listenerStateMachine.subscribe(handleStateMachineMsg);
+      listenerStateMachine.subscribe(handleKeyValueMsg);
+
+  }
+
+  if(isConnected & listenerInfo === null)
+  {
+    listenerInfo = createListener( 
+      topicPathInfo,
+      keyValueMsgType,
+      Number(0),
+      'none');
+      listenerInfo.subscribe(handleKeyValueMsg);
 
   }
   
@@ -195,21 +224,61 @@ export default function FinaleHolePage(props){
     clearButton = <button id="clearBtn" className="btn btn-clear w-32 m-4 select-none border-black" onClick={btnClick}>CLEAR</button>;
   } 
 
+  let bannerColor;
+  if (state === States.error){
+    bannerColor = "bg-red-500";
+  }
+  else{
+    bannerColor =  "bg-gray-800";
+  }
+
+  switch(state) {
+    case States.error:
+      bannerColor = "bg-red-500";
+      break;
+    case States.killed:
+    case States.aborting:
+      bannerColor = "bg-red-900";
+      break;
+    case States.resetting:
+      bannerColor =  "bg-blue-500";
+      break;
+    case States.idle:
+      bannerColor =  "bg-gray-200";
+      break;
+    case States.running:
+      bannerColor =  "bg-green-500";
+      break;
+    case States.stopping:
+      bannerColor =  "bg-orange-500";
+      break;
+    default:
+      bannerColor =  "bg-gray-800";
+  }
+
+  let errorMsg = "";
+
+  if(errors.present){
+    errorMsg = ": " + errors.list[0];
+  }
+
+  const ballreturnMotorMode = intToModeString(info["ballreturnMotorMode"]);
+  const ballreturnState = StateString[String(info["ballreturnState"])] ? StateString[String(info["ballreturnState"])]:"";
+  const cropcircleState = StateString[String(info["cropcircleState"])] ? StateString[String(info["cropcircleState"])]:"";
+
   return(
-    <BasePage pageName = {pageName} pageContent={
+    <BasePage pageName = {pageName} bannerColor={bannerColor} pageContent={
       <div className="section w-screen justify-center">
         <div className="max-width-full">
           <ReactP5Wrapper  sketch={FinaleP5Sketch} jointStateMsg={jointStateMsg}/>
         </div>
-        <div className="flex flex-col items-center justify-center">
-
-         
-          <b>Hole State: </b>{StateString[String(state)]}<br />
+        <div className="flex flex-col items-start justify-start">
+          <b>Hole State: </b>{StateString[String(state)] + errorMsg}<br />
           <b> </b> <br />
           <b>Step Number: </b>{stepMsg} <br />
         </div>
         
-        <div className="flex flex-row justify-evenly mb-4 ">
+        <div className="flex flex-row justify-start mb-4 ">
           
           {startButton}
           {stopButton}
@@ -217,18 +286,48 @@ export default function FinaleHolePage(props){
           {clearButton}
         </div>
 
-        <div className="flex flex-row justify-evenly mb-4 ">
-          <button className="btn btn-black w-32 mt-4 mb-2 select-none">
-                <Link to={href}>STEPPERS</Link>
+        <div className="flex flex-row justify-start mb-4 ">
+          <button className="bg-black text-white py-2 px-4 w-50 mt-4 mb-2 select-none">
+                <Link to={href}>STEPPERS PAGE</Link>
           </button>
         </div>
 
         <OpSettingsSwitchesGroup settingsGroup="bismuth" label="Bismuth"/>
+        <b> </b> <br />
+        <b>Crop Circle Motor Status: </b>{boolToOnOffString(info["cropcircleMotor"])}<br />
         <OpSettingsSwitchesGroup settingsGroup="cropcircle" label="Crop Circle"/>
+        <b> </b> <br />
+        <b>Ball Return State: </b>{ballreturnState}<br />
+        <b>Ball Return Motor Status: </b>{ballreturnMotorMode}<br />
+        <b> </b> <br />
         <OpSettingsSwitchesGroup settingsGroup="ballreturn" label="Ball Return"/>
       
       </div>
       }>
       </BasePage>  
   );
+}
+
+function boolToOnOffString(x){
+  return x ? "on":"off";
+}
+
+function intToModeString(x){
+
+  switch(x){
+    case 0:
+      return "INACTIVE";
+    case 1:
+      return "IDLE";
+    case 2:
+      return "RUNNING";
+    case 3:
+      return "HOMING";
+    case 4:
+      return "STOPPING";
+    case 9:
+      return "ERROR";
+    default:
+      return "";
+  }
 }

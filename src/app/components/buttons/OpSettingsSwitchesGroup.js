@@ -11,7 +11,7 @@ import ROSLIB from 'roslib'
 //import { useROS} from '../../components/ROS/ROS';
 import { useROS} from '../ROS/ROS';
 
-let init = false;
+//let init = false;
 
 export default function OpSettingsSwitchesGroup(props) {
   const [state, setState] = useState({
@@ -22,16 +22,22 @@ export default function OpSettingsSwitchesGroup(props) {
     
   });
 
-  const settingsGroup = props.settingsGroup? props.settingsGroup: "operationSettings";
+  const settingsGroup = props.settingsGroup;
   //let client
 
   const { finaleSettingsClient, ros, isConnected} = useROS();
   //client = finaleSettingsClient;
 
+  const [init,setInit] = useState(false);
+
   useEffect(() => {
 
     return() => {
-      init = false;
+      setInit(false)
+      if(isConnected){
+        //setInit(true);
+        handleChange(null);
+      }
     };
 
   },[]); //leave the array in despite the warning, it is needed for some reason
@@ -84,11 +90,11 @@ export default function OpSettingsSwitchesGroup(props) {
   };
 
   if(isConnected & !init){
-    init = true;
+    setInit(true);
     handleChange(null);
   }
   else if(!isConnected & init){
-    init = false;
+    setInit(false);
   }
 
 
