@@ -4,6 +4,7 @@ import { useROS} from '../../components/ROS/ROS';
 
 let publisherCmdVel = null;
 let publisherCmds = null;
+let maxSpeed = 1.0;
 
 export default function MotorControl(props) {
   //const [eventLogPrev, setEventLogPrev]=useState(" ");
@@ -55,7 +56,7 @@ export default function MotorControl(props) {
     }*/
 
     jointStateCmd.name = [String(motorId) + "_joint"];
-    jointStateCmd.velocity = [0.5];
+    jointStateCmd.velocity = [maxSpeed];
 
     if (publisherCmdVel !== null && isConnected)
     {
@@ -66,7 +67,7 @@ export default function MotorControl(props) {
   function jogMotorNeg(event){
 
     jointStateCmd.name = [String(motorId) + "_joint"];
-    jointStateCmd.velocity = [-0.5];
+    jointStateCmd.velocity = [-maxSpeed];
 
     if (publisherCmdVel !== null && isConnected)
     {
