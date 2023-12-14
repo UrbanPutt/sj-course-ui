@@ -1,3 +1,5 @@
+THIS SOURCE CODE HAS BEEN DEPRECATED - USE SJ-COURSE-APP INSTEAD
+
 # Getting Started with San Jose Course User Interface
 
 
